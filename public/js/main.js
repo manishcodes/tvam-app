@@ -12,10 +12,17 @@ function goToScreen(n) {
 }
 
 function startCountdown() {
-    let timeLeft = 60;
+   let timeLeft = 60;
     const el = document.getElementById("countdown");
+    const progressBar = document.querySelector(".progress-bar");
+    const thumb = document.querySelector(".progress-thumb");
+
     const interval = setInterval(() => {
         el.textContent = timeLeft--;
+        const progressPercent = ((60 - timeLeft) / 60) * 100;
+        progressBar.style.setProperty('--progress', `${progressPercent}%`);
+        thumb.style.setProperty('--progress', `${progressPercent}%`);
+
         if (timeLeft < 0) {
             clearInterval(interval);
             goToScreen(4);
