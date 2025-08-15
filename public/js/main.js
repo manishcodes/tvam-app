@@ -23,6 +23,16 @@ function startCountdown() {
     }, 1000);
 }
 
+// Speech
+function speakText(text) {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "en-US"; // You can change this to another language code
+    utterance.rate = 0.95; // Speed (1 is normal, <1 slower, >1 faster)
+    utterance.pitch = 1; // Voice pitch
+    window.speechSynthesis.speak(utterance);
+}
+
+
 async function askGuru() {
     const input = document.getElementById('userInput').value.trim();
     const responseEl = document.getElementById('responseText');
@@ -52,6 +62,10 @@ async function askGuru() {
 
         const response = data.choices[0].message.content;
         responseEl.textContent = response;
+
+        //Call speech
+        speakText(response);
+
         responseEl.style.opacity = 1;
 
         // setTimeout(() => {
