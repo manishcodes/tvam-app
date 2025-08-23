@@ -4,63 +4,58 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TVAM</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
-  <!-- Moving Smoke Background -->
-  <div class="smoke-bg">
-    <div class="smoke-blob pink"></div>
-    <div class="smoke-blob blue"></div>
-    <div class="smoke-blob yellow"></div>
-    <div class="smoke-blob purple"></div>
-  </div>
-
   <!-- Splash Screen -->
   <div class="screen active" id="screen1">
-    <img src="assets/TVAM.png" alt="TVAM Logo" style="height: 80px;" />
-    <button class="circle-button" onclick="goToScreen(2)">Begin</button>
+    <img src="assets/beginInwardsLogo.jpeg" alt="TVAM Logo" style="height: 50px; padding-bottom: 10px;" />
+    <img src="assets/TVAM.png" alt="TVAM Logo" style="height: 40px;" />
+    <p style="color: #d8a441;font-size: 16.5px; margin: 10px 0 5px 0;">An Inner Life Companion</p>
+    <p style="color: #BABABA;font-size:13.5px; font-style: italic; margin: 0;">Guiding people from noise to clarity</p>
+    
+    <button class="circle-button begin-btn" onclick="goToScreen(2)">Begin</button>
   </div>
 
   <!-- Prelude Screen -->
   <div class="screen" id="screen2">
-    <p>Before you step in, let the breath soften, and stillness return.</p>
-    <img src="assets/TVAM.png" alt="TVAM Logo" style="height: 80px;" />
-    <button onclick="goToScreen(3)">Begin Prelude</button>
-    <button onclick="goToScreen(4)">Skip to app &gt;&gt;</button>
+    <img src="assets/TVAM.png" alt="TVAM Logo" style="height: 20px;top: 10px;" />
+    <p style="margin: 45px 0 100px 0;">Before you step in, let the breath soften, and stillness return.</p>
+    
+    <button class="circle-button" id="prelude-btn" onclick="goToScreen(3)">Begin Prelude</button>
+    <button class="skip-btn" style="border-radius: 15px;" onclick="goToScreen(4)">Skip to app &gt;&gt;</button>
   </div>
 
   <!-- Breathing Timer Screen -->
   <div class="screen" id="screen3">
-    <img src="assets/TVAM.png" alt="TVAM Logo" style="height: 80px;" />
-    <p>Let it settle...<br>Notice the breath.</p>
-    <div class="countdown" id="countdown">60</div>
-    <div class="progress-container">
-      <div class="progress-bar">
-        <div class="progress-thumb"></div>
-      </div>
-    </div>
-    <button onclick="goToScreen(4)">Skip to app &gt;&gt;</button>
-  </div>
+    <img src="assets/TVAM.png" alt="TVAM Logo" style="height: 20px;top: 10px;" />
+    <p style="margin: 45px 0 100px 0;">Let it settle...<br>Notice the breath.</p>
 
-  <!-- Option Selector Screen -->
-  <div class="screen" id="screen4">
-    <img src="assets/TVAM.png" alt="TVAM Logo" style="height: 80px;" />
-    <div>
-      <div class="circle-button">😊</div>
-      <div class="circle-button" onclick="goToScreen(5)">🧘</div>
-      <div class="circle-button">🔔</div>
+    <!-- Breathing Circle with Text -->
+    <div class="breathing-circle">
+      <span id="breathingText">Breathe In</span>
     </div>
+
+    <div class="countdown" id="countdown">60</div>
+    <button class="skip-btn" onclick="goToScreen(4)">Skip to app &gt;&gt;</button>
   </div>
 
   <!-- Spiritual Guru Chat Screen -->
-  <div class="screen" id="screen5">
+  <div class="screen" id="screen4">
+    <img src="assets/TVAM.png" alt="TVAM Logo" style="height: 20px;top: 10px;" />
     <div id="responseText"></div>
     <div class="input-container">
       <textarea id="userInput" rows="1" placeholder="Ask the guru..."></textarea>
       <button onclick="askGuru()">Send</button>
     </div>
   </div>
+
+  <!-- Footer -->
+  <footer>
+    <p class="copyright">© 2025 Begin Inwards, Inc. All rights reserved.</p>
+  </footer>
 
   <script src="js/main.js"></script>
 </body>
