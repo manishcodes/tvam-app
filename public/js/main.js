@@ -118,14 +118,31 @@ function speakText(text) {
     window.speechSynthesis.speak(utterance);
 }
 
+const userInput = document.getElementById('userInput');
+userInput.addEventListener("keypress", function(event){
+    if(event.key === "Enter"){
+        event.preventDefault();
+        askGuru();
+    }
+});
+
+// 🔑 Auto-expand textarea logic
+function autoResize(el) {
+    el.style.height = "auto";
+    el.style.height = el.scrollHeight + "px";
+}
+userInput.addEventListener("input", () => autoResize(userInput));
+window.addEventListener("load", () => autoResize(userInput));
+
 async function askGuru() {
-    const input = document.getElementById('userInput').value.trim();
+    const input = userInput.value.trim();
     const responseEl = document.getElementById('responseText');
+    const welcomeChatText = document.getElementById('welcome-chat-text');
     if (!input) return;
 
     responseEl.textContent = "🧘‍♂️ Listening...";
     responseEl.style.opacity = 1;
-
+    welcomeChatText.textContent = " ";
     try {
         const result = await fetch("/ask-guru", {
             method: "POST",
@@ -150,5 +167,6 @@ async function askGuru() {
         responseEl.style.opacity = 1;
     }
 
-    document.getElementById('userInput').value = "";
+    userInput.value = "";
+    autoResize(userInput); // reset height after send
 }

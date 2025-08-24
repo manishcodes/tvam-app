@@ -11,7 +11,7 @@
 
   <!-- Splash Screen -->
   <div class="screen active" id="screen1">
-    <img src="assets/beginInwardsLogo.jpeg" alt="TVAM Logo" style="height: 50px; padding-bottom: 10px;" />
+    <img src="assets/beginInwardsLogo.png" alt="TVAM Logo" style="height: 50px; padding-bottom: 10px;" />
     <img src="assets/TVAM.png" alt="TVAM Logo" style="height: 40px;" />
     <p style="color: #d8a441;font-size: 16.5px; margin: 10px 0 5px 0;">An Inner Life Companion</p>
     <p style="color: #BABABA;font-size:13.5px; font-style: italic; margin: 0;">Guiding people from noise to clarity</p>
@@ -45,10 +45,12 @@
   <!-- Spiritual Guru Chat Screen -->
   <div class="screen" id="screen4">
     <img src="assets/TVAM.png" alt="TVAM Logo" style="height: 20px;top: 10px;" />
+    <div class="breathing-circle-chat"></div>
+    <div id="welcome-chat-text" style="position: absolute; top: 33%;">Begin where you are.<br>Everything is welcome.</div>
     <div id="responseText"></div>
     <div class="input-container">
-      <textarea id="userInput" rows="1" placeholder="Ask the guru..."></textarea>
-      <button onclick="askGuru()">Send</button>
+      <textarea id="userInput" rows="1" placeholder="Type or speak what's on your mind"></textarea>
+      <!-- <button onclick="askGuru()">Send</button> -->
     </div>
   </div>
 
