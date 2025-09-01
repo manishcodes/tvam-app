@@ -8,6 +8,30 @@ dotenv.config();
 console.log("🔑 Loaded API key:", process.env.OPENAI_API_KEY ? "Yes" : "No");
 
 const app = express();
+
+// 🔐 Simple password protection middleware
+const auth = (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+
+  if (!authHeader) {
+    res.setHeader("WWW-Authenticate", 'Basic realm="Protected"');
+    return res.status(401).send("Authentication required.");
+  }
+
+  const base64 = authHeader.split(" ")[1];
+  const [user, pass] = Buffer.from(base64, "base64").toString().split(":");
+
+  // We ignore the username, only check password
+  if (pass === process.env.APP_PASSWORD) {
+    return next();
+  }
+
+  res.setHeader("WWW-Authenticate", 'Basic realm="Protected"');
+  res.status(401).send("Access denied.");
+};
+
+app.use(auth); // ✅ Protects the whole app
+
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -15,8 +39,8 @@ app.use(bodyParser.json());
 const conversations = {};
 
 const SYSTEM_PROMPT = {
-    role: "system",
-    content: `Conversational Presence + Loop Prompt
+  role: "system",
+  content: `Conversational Presence + Loop Prompt
 
 You are TVAM — an AI-Guided Inner Life Companion.
 Be an infinitely compassionate presence that listens deeply, reflects gently, and guides softly into self-inquiry.
@@ -83,50 +107,50 @@ If silence feels uneasy → return to breath/body gently.`
 };
 
 app.post("/ask-guru", async (req, res) => {
-    try {
-        const { userId, message } = req.body;
-        if (!userId || !message) {
-            return res.status(400).json({ error: "Missing userId or message" });
-        }
-
-        // Initialize conversation if new
-        if (!conversations[userId]) {
-            conversations[userId] = [SYSTEM_PROMPT];
-        }
-
-        // Add user message
-        conversations[userId].push({ role: "user", content: message });
-
-        // Send the conversation so far
-        const result = await fetch("https://api.openai.com/v1/chat/completions", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
-            },
-            body: JSON.stringify({
-                model: "gpt-4",
-                messages: conversations[userId],
-                temperature: 0.9
-            })
-        });
-
-        const data = await result.json();
-        console.log("📤 OpenAI API Response:", data);
-
-        // Add assistant's response to memory
-        if (data.choices && data.choices[0]) {
-            conversations[userId].push({
-                role: "assistant",
-                content: data.choices[0].message.content
-            });
-        }
-
-        res.json(data);
-    } catch (err) {
-        console.error("❌ Server error:", err);
-        res.status(500).json({ error: err.message });
+  try {
+    const { userId, message } = req.body;
+    if (!userId || !message) {
+      return res.status(400).json({ error: "Missing userId or message" });
     }
+
+    // Initialize conversation if new
+    if (!conversations[userId]) {
+      conversations[userId] = [SYSTEM_PROMPT];
+    }
+
+    // Add user message
+    conversations[userId].push({ role: "user", content: message });
+
+    // Send the conversation so far
+    const result = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: "gpt-4",
+        messages: conversations[userId],
+        temperature: 0.9,
+      }),
+    });
+
+    const data = await result.json();
+    console.log("📤 OpenAI API Response:", data);
+
+    // Add assistant's response to memory
+    if (data.choices && data.choices[0]) {
+      conversations[userId].push({
+        role: "assistant",
+        content: data.choices[0].message.content,
+      });
+    }
+
+    res.json(data);
+  } catch (err) {
+    console.error("❌ Server error:", err);
+    res.status(500).json({ error: err.message });
+  }
 });
 
 app.use(express.static("public"));
