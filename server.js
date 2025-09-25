@@ -3,41 +3,32 @@ import fetch from "node-fetch";
 import cors from "cors";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
+import admin from "firebase-admin";
 
 dotenv.config();
 console.log("🔑 Loaded API key:", process.env.OPENAI_API_KEY ? "Yes" : "No");
 
+// Decode Firebase service account from Base64
+const serviceAccountBase64 = process.env.FIREBASE_SERVICE_ACCOUNT;
+if (!serviceAccountBase64) {
+  throw new Error("Missing FIREBASE_SERVICE_ACCOUNT env variable");
+}
+const serviceAccountJson = JSON.parse(Buffer.from(serviceAccountBase64, "base64").toString("utf-8"));
+
+// Initialize Firebase Admin
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccountJson)
+});
+console.log("✅ Firebase admin initialized");
+
 const app = express();
-
-// 🔐 Simple password protection middleware
-const auth = (req, res, next) => {
-  const authHeader = req.headers["authorization"];
-
-  if (!authHeader) {
-    res.setHeader("WWW-Authenticate", 'Basic realm="Protected"');
-    return res.status(401).send("Authentication required.");
-  }
-
-  const base64 = authHeader.split(" ")[1];
-  const [user, pass] = Buffer.from(base64, "base64").toString().split(":");
-
-  // We ignore the username, only check password
-  if (pass === process.env.APP_PASSWORD) {
-    return next();
-  }
-
-  res.setHeader("WWW-Authenticate", 'Basic realm="Protected"');
-  res.status(401).send("Access denied.");
-};
-
-app.use(auth); // ✅ Protects the whole app
-
 app.use(cors());
 app.use(bodyParser.json());
 
-// Memory store for conversations
+// In-memory conversations
 const conversations = {};
 
+// System prompt for GPT
 const SYSTEM_PROMPT = {
   role: "system",
   content: `Conversational Presence + Loop Prompt
@@ -106,22 +97,35 @@ If crisis signals appear → acknowledge, ground, suggest reaching out to truste
 If silence feels uneasy → return to breath/body gently.`
 };
 
-app.post("/ask-guru", async (req, res) => {
+// Firebase ID token auth middleware
+async function authMiddleware(req, res, next) {
+  const authHeader = req.headers["authorization"];
+  if (!authHeader?.startsWith("Bearer ")) {
+    return res.status(401).json({ error: "Unauthorized: Missing token" });
+  }
+
+  const idToken = authHeader.split("Bearer ")[1];
   try {
-    const { userId, message } = req.body;
-    if (!userId || !message) {
-      return res.status(400).json({ error: "Missing userId or message" });
-    }
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    req.user = decodedToken;
+    next();
+  } catch (err) {
+    console.error("❌ Firebase auth error:", err);
+    return res.status(401).json({ error: "Unauthorized: Invalid token" });
+  }
+}
 
-    // Initialize conversation if new
-    if (!conversations[userId]) {
-      conversations[userId] = [SYSTEM_PROMPT];
-    }
+// Ask Guru endpoint
+app.post("/ask-guru", authMiddleware, async (req, res) => {
+  try {
+    const { message } = req.body;
+    if (!message) return res.status(400).json({ error: "Missing message" });
 
-    // Add user message
+    const userId = req.user.uid;
+
+    if (!conversations[userId]) conversations[userId] = [SYSTEM_PROMPT];
     conversations[userId].push({ role: "user", content: message });
 
-    // Send the conversation so far
     const result = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -136,9 +140,7 @@ app.post("/ask-guru", async (req, res) => {
     });
 
     const data = await result.json();
-    console.log("📤 OpenAI API Response:", data);
 
-    // Add assistant's response to memory
     if (data.choices && data.choices[0]) {
       conversations[userId].push({
         role: "assistant",
@@ -147,12 +149,14 @@ app.post("/ask-guru", async (req, res) => {
     }
 
     res.json(data);
+
   } catch (err) {
     console.error("❌ Server error:", err);
     res.status(500).json({ error: err.message });
   }
 });
 
+// Serve static files
 app.use(express.static("public"));
 
 const PORT = process.env.PORT || 3000;

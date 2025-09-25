@@ -1,78 +1,41 @@
-// Generate a persistent userId for this browser session
+// Persistent userId
 const userId = localStorage.getItem("tvam_userId") || (() => {
     const id = crypto.randomUUID();
     localStorage.setItem("tvam_userId", id);
     return id;
 })();
 
+// Screen navigation
 function goToScreen(n) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById('screen' + n).classList.add('active');
-    if (n === 3) {
-        startCountdown();
-        // startBreathingText(); // (kept for reference; no longer needed because CSS syncs the text)
-    }
+    if (n === 3) startCountdown();
 }
 
+// Attach click listeners
+window.addEventListener('DOMContentLoaded', () => {
+    document.querySelector('.begin-btn').addEventListener('click', () => goToScreen(2));
+    document.getElementById('prelude-btn').addEventListener('click', () => goToScreen(3));
+    document.querySelectorAll('.skip-btn').forEach(btn => btn.addEventListener('click', () => goToScreen(4)));
+});
+
+// Countdown timer
 function startCountdown() {
    let timeLeft = 60;
-    const el = document.getElementById("countdown");
-    const progressBar = document.querySelector(".progress-bar");
-    const thumb = document.querySelector(".progress-thumb");
+   const el = document.getElementById("countdown");
 
-    const interval = setInterval(() => {
+   const interval = setInterval(() => {
         el.textContent = timeLeft--;
-        // const progressPercent = ((60 - timeLeft) / 60) * 100;
-        // progressBar.style.setProperty('--progress', `${progressPercent}%`);
-        // thumb.style.setProperty('--progress', `${progressPercent}%`);
-
         if (timeLeft < 0) {
             clearInterval(interval);
             goToScreen(4);
         }
-    }, 1000);
+   }, 1000);
 }
 
-/* --------- Old JS-driven breathing text (kept as-is per your request)
-   We now use CSS animations to keep the "Breathe in / out" text perfectly in
-   sync with the expanding ring, so this function is not called.
-*/
-function startBreathingText() {
-    const textEl = document.getElementById("breathingText");
-    let isInhale = true;
-
-    function cycle() {
-        if (isInhale) {
-            if (textEl) {
-              textEl.textContent = "Breathe In";
-              textEl.classList.add("show");
-            }
-            setTimeout(() => {
-                if (textEl) textEl.classList.remove("show");
-                isInhale = false;
-                setTimeout(cycle, 1000); // wait for fade out before switching
-            }, 4000); // inhale 4s
-        } else {
-            if (textEl) {
-              textEl.textContent = "Breathe Out";
-              textEl.classList.add("show");
-            }
-            setTimeout(() => {
-                if (textEl) textEl.classList.remove("show");
-                isInhale = true;
-                setTimeout(cycle, 1000);
-            }, 8000); // exhale 8s
-        }
-    }
-    cycle();
-}
-// --------- end legacy breathing text code ---------
-
-// --- Guru Speech with Word Highlighting (color only, no background) ---
+// Guru speech & highlight logic
 function speakAndHighlight(text, element) {
     if (!window.speechSynthesis) return;
-
-    // Split into words and wrap in spans
     const words = text.split(/\s+/);
     element.innerHTML = words.map(w => `<span>${w}</span>`).join(" ");
     element.style.opacity = 1;
@@ -83,57 +46,37 @@ function speakAndHighlight(text, element) {
     utterance.pitch = 0.9;
 
     const spans = element.querySelectorAll("span");
-
-    // Use charIndex from onboundary to map to the exact word being spoken
     utterance.onboundary = (event) => {
-        if (event.name === "word" || event.charIndex !== undefined) {
-            const charIndex = event.charIndex ?? 0;
-            let running = 0;
-            let idx = 0;
-
-            for (let i = 0; i < words.length; i++) {
-                running += words[i].length + 1; // include space
-                if (charIndex < running) { idx = i; break; }
-            }
-
-            spans.forEach(s => s.classList.remove("highlight"));
-            if (spans[idx]) spans[idx].classList.add("highlight");
+        const charIndex = event.charIndex ?? 0;
+        let running = 0, idx = 0;
+        for (let i=0; i<words.length; i++) {
+            running += words[i].length + 1;
+            if (charIndex < running) { idx = i; break; }
         }
-    };
-
-    utterance.onend = () => {
         spans.forEach(s => s.classList.remove("highlight"));
+        if (spans[idx]) spans[idx].classList.add("highlight");
     };
-
-    window.speechSynthesis.cancel(); // stop anything else
+    utterance.onend = () => spans.forEach(s => s.classList.remove("highlight"));
+    window.speechSynthesis.cancel();
     window.speechSynthesis.speak(utterance);
 }
 
-// Speech (simple helper retained for compatibility elsewhere)
-function speakText(text) {
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "en-US";
-    utterance.rate = 0.8;
-    utterance.pitch = 0.8;
-    window.speechSynthesis.speak(utterance);
-}
-
-const userInput = document.getElementById('userInput');
-userInput.addEventListener("keypress", function(event){
-    if(event.key === "Enter"){
-        event.preventDefault();
-        askGuru();
-    }
-});
-
-// 🔑 Auto-expand textarea logic
+// Auto-expand textarea
 function autoResize(el) {
     el.style.height = "auto";
     el.style.height = el.scrollHeight + "px";
 }
+const userInput = document.getElementById('userInput');
 userInput.addEventListener("input", () => autoResize(userInput));
+userInput.addEventListener("keypress", (event) => {
+    if(event.key === "Enter") {
+        event.preventDefault();
+        askGuru();
+    }
+});
 window.addEventListener("load", () => autoResize(userInput));
 
+// Ask Guru function with Firebase ID token
 async function askGuru() {
     const input = userInput.value.trim();
     const responseEl = document.getElementById('responseText');
@@ -143,11 +86,20 @@ async function askGuru() {
     responseEl.textContent = "🧘‍♂️ Listening...";
     responseEl.style.opacity = 1;
     welcomeChatText.textContent = " ";
+
     try {
+        const user = window.auth.currentUser;
+        if (!user) throw new Error("User not logged in");
+
+        const token = await user.getIdToken();
+
         const result = await fetch("/ask-guru", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ userId, message: input })
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ message: input }) // ✅ Only message, no userId
         });
 
         const data = await result.json();
@@ -158,8 +110,6 @@ async function askGuru() {
         }
 
         const response = data.choices[0].message.content;
-
-        // Speak + highlight color
         speakAndHighlight(response, responseEl);
 
     } catch (err) {
@@ -168,5 +118,9 @@ async function askGuru() {
     }
 
     userInput.value = "";
-    autoResize(userInput); // reset height after send
+    autoResize(userInput);
 }
+
+// Expose functions globally
+window.goToScreen = goToScreen;
+window.askGuru = askGuru;

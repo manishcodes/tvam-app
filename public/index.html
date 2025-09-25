@@ -1,64 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TVAM</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TVAM</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCPCRnEl01GaxbfC5EwWhen_DUOLE2-wZA",
+  authDomain: "mytvam-app.firebaseapp.com",
+  projectId: "mytvam-app",
+  storageBucket: "mytvam-app.firebasestorage.app",
+  messagingSenderId: "336382893777",
+  appId: "1:336382893777:web:6684804f2c94c101636ff0",
+  measurementId: "G-EETD3SZX43"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+window.auth = auth; // make auth globally accessible for main.js
+
+onAuthStateChanged(auth, (user) => {
+  if (!user) window.location.href = "login.html";
+});
+
+window.logout = () => {
+  signOut(auth).then(() => window.location.href = "login.html");
+};
+</script>
 </head>
 <body>
 
-  <!-- Splash Screen -->
-  <div class="screen active" id="screen1">
-    <img src="assets/beginInwardsLogo.png" alt="TVAM Logo" style="height: 50px; padding-bottom: 10px;" />
-    <img src="assets/TVAM.png" alt="TVAM Logo" style="height: 40px;" />
-    <p style="color: #d8a441;font-size: 16.5px; margin: 10px 0 5px 0;">An Inner Life Companion</p>
-    <p style="color: #BABABA;font-size:13.5px; font-style: italic; margin: 0;">Guiding people from noise to clarity</p>
-    
-    <button class="circle-button begin-btn" onclick="goToScreen(2)">Begin</button>
+<!-- Splash Screen -->
+<div class="screen active" id="screen1">
+  <img src="assets/beginInwardsLogo.png" alt="TVAM Logo" style="height: 50px; padding-bottom: 10px;" />
+  <img src="assets/TVAM.png" alt="TVAM Logo" style="height: 40px;" />
+  <p style="color: #d8a441;font-size: 16.5px; margin: 10px 0 5px 0;">An Inner Life Companion</p>
+  <p style="color: #BABABA;font-size:13.5px; font-style: italic; margin: 0;">Guiding people from noise to clarity</p>
+  <button class="circle-button begin-btn">Begin</button>
+</div>
+
+<!-- Prelude Screen -->
+<div class="screen" id="screen2">
+  <img src="assets/TVAM.png" alt="TVAM Logo" style="height: 20px;top: 10px;" />
+  <p style="margin: 45px 0 100px 0;">Before you step in, let the breath soften, and stillness return.</p>
+  <button class="circle-button" id="prelude-btn">Begin Prelude</button>
+  <button class="skip-btn" style="border-radius: 15px;">Skip to app &gt;&gt;</button>
+</div>
+
+<!-- Breathing Timer Screen -->
+<div class="screen" id="screen3">
+  <img src="assets/TVAM.png" alt="TVAM Logo" style="height: 20px;top: 10px;" />
+  <p style="margin: 45px 0 100px 0;">Let it settle...<br>Notice the breath.</p>
+  <div class="breathing-circle"><span id="breathingText">Breathe In</span></div>
+  <div class="countdown" id="countdown">60</div>
+  <button class="skip-btn">Skip to app &gt;&gt;</button>
+</div>
+
+<!-- Spiritual Guru Chat Screen -->
+<div class="screen" id="screen4">
+  <img src="assets/TVAM.png" alt="TVAM Logo" style="height: 20px;top: 10px;" />
+  <div class="breathing-circle-chat"></div>
+  <div id="welcome-chat-text" style="position: absolute; top: 33%;">Begin where you are.<br>Everything is welcome.</div>
+  <div id="responseText"></div>
+  <div class="input-container">
+    <textarea id="userInput" rows="1" placeholder="Type or speak what's on your mind"></textarea>
+    <button onclick="logout()" class="skip-btn" style="margin-top:10px;">Logout</button>
   </div>
+</div>
 
-  <!-- Prelude Screen -->
-  <div class="screen" id="screen2">
-    <img src="assets/TVAM.png" alt="TVAM Logo" style="height: 20px;top: 10px;" />
-    <p style="margin: 45px 0 100px 0;">Before you step in, let the breath soften, and stillness return.</p>
-    
-    <button class="circle-button" id="prelude-btn" onclick="goToScreen(3)">Begin Prelude</button>
-    <button class="skip-btn" style="border-radius: 15px;" onclick="goToScreen(4)">Skip to app &gt;&gt;</button>
-  </div>
+<footer>
+  <p class="copyright">© 2025 Begin Inwards, Inc. All rights reserved.</p>
+</footer>
 
-  <!-- Breathing Timer Screen -->
-  <div class="screen" id="screen3">
-    <img src="assets/TVAM.png" alt="TVAM Logo" style="height: 20px;top: 10px;" />
-    <p style="margin: 45px 0 100px 0;">Let it settle...<br>Notice the breath.</p>
-
-    <!-- Breathing Circle with Text -->
-    <div class="breathing-circle">
-      <span id="breathingText">Breathe In</span>
-    </div>
-
-    <div class="countdown" id="countdown">60</div>
-    <button class="skip-btn" onclick="goToScreen(4)">Skip to app &gt;&gt;</button>
-  </div>
-
-  <!-- Spiritual Guru Chat Screen -->
-  <div class="screen" id="screen4">
-    <img src="assets/TVAM.png" alt="TVAM Logo" style="height: 20px;top: 10px;" />
-    <div class="breathing-circle-chat"></div>
-    <div id="welcome-chat-text" style="position: absolute; top: 33%;">Begin where you are.<br>Everything is welcome.</div>
-    <div id="responseText"></div>
-    <div class="input-container">
-      <textarea id="userInput" rows="1" placeholder="Type or speak what's on your mind"></textarea>
-      <!-- <button onclick="askGuru()">Send</button> -->
-    </div>
-  </div>
-
-  <!-- Footer -->
-  <footer>
-    <p class="copyright">© 2025 Begin Inwards, Inc. All rights reserved.</p>
-  </footer>
-
-  <script src="js/main.js"></script>
+<script type="module" src="js/main.js"></script>
 </body>
 </html>
