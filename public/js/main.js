@@ -33,7 +33,7 @@ function startCountdown() {
    }, 1000);
 }
 
-// Guru speech & highlight logic
+// Guru speech & lyrics-style scrolling
 function speakAndHighlight(text, element) {
     if (!window.speechSynthesis) return;
     const words = text.split(/\s+/);
@@ -54,7 +54,14 @@ function speakAndHighlight(text, element) {
             if (charIndex < running) { idx = i; break; }
         }
         spans.forEach(s => s.classList.remove("highlight"));
-        if (spans[idx]) spans[idx].classList.add("highlight");
+        if (spans[idx]) {
+            spans[idx].classList.add("highlight");
+            // auto-scroll lyrics
+            spans[idx].scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+        }
     };
     utterance.onend = () => spans.forEach(s => s.classList.remove("highlight"));
     window.speechSynthesis.cancel();
@@ -99,7 +106,7 @@ async function askGuru() {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`
             },
-            body: JSON.stringify({ message: input }) // ✅ Only message, no userId
+            body: JSON.stringify({ message: input })
         });
 
         const data = await result.json();

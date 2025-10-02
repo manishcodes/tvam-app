@@ -270,3 +270,74 @@ footer p {
     font-size: 12px;
   }
 }
+
+/* --- Lyric Display Wrapper --- */
+#responseWrapper {
+  position: absolute;
+  top: 35%;
+  bottom: 120px; /* keep space for input/footer */
+  left: 10%;
+  right: 10%;
+  overflow-y: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#responseText {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #d9a341;
+  text-align: center;
+  line-height: 1.6;
+  max-height: 50%;
+  overflow-y: auto; /* fallback scroll */
+  transition: opacity 0.5s ease-in-out;
+  padding: 0 0.5rem;
+  word-break: break-word;
+}
+
+#responseText span {
+  opacity: 0.5;
+  transition: opacity 0.3s, color 0.3s;
+}
+
+#responseText .highlight {
+  opacity: 1;
+  color: #000;
+  font-weight: bold;
+}
+
+.lyrics-container{
+  height: 1200px;
+}
+/* Responsive font sizing */
+@media (max-width: 768px) {
+  #responseText {
+    font-size: 1.2rem;
+  }
+}
+@media (max-width: 480px) {
+  #responseText {
+    font-size: 1rem;
+  }
+}
+
+.logout-btn {
+position: fixed;
+top: 15px;
+right: 15px;
+z-index: 10;
+padding: 0.6rem 1.2rem;
+background: rgba(255, 255, 255, 0.15);
+backdrop-filter: blur(8px);
+border: 1px solid rgba(255, 255, 255, 0.3);
+border-radius: 30px;
+color: #000;
+font-size: 0.95rem;
+font-weight: 500;
+cursor: pointer;
+transition: all 0.25s ease;
+box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
