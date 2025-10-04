@@ -154,11 +154,22 @@ button:hover,
   bottom: 120px;
   left: 10%;
   right: 10%;
-  overflow-y: auto;
+  overflow-y: scroll; /* needed for scrolling to work */
+  -webkit-overflow-scrolling: touch; /* smooth momentum scroll on iOS */
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
+
+  /* Hide scrollbar across browsers */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
 }
+
+#responseWrapper::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+
 
 #responseText {
   font-size: 1.5rem;
@@ -180,6 +191,8 @@ button:hover,
   opacity: 1;
   color: #000;
   font-weight: bold;
+  display: inline-block; /* keeps them horizontal */
+  transition: color 0.2s, opacity 0.2s;
 }
 
 /* --- Input --- */
