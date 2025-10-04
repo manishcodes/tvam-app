@@ -6,29 +6,19 @@ import dotenv from "dotenv";
 import admin from "firebase-admin";
 
 dotenv.config();
-console.log("🔑 Loaded API key:", process.env.OPENAI_API_KEY ? "Yes" : "No");
 
-// Decode Firebase service account from Base64
 const serviceAccountBase64 = process.env.FIREBASE_SERVICE_ACCOUNT;
-if (!serviceAccountBase64) {
-  throw new Error("Missing FIREBASE_SERVICE_ACCOUNT env variable");
-}
+if (!serviceAccountBase64) throw new Error("Missing FIREBASE_SERVICE_ACCOUNT env variable");
 const serviceAccountJson = JSON.parse(Buffer.from(serviceAccountBase64, "base64").toString("utf-8"));
 
-// Initialize Firebase Admin
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccountJson)
-});
-console.log("✅ Firebase admin initialized");
+admin.initializeApp({ credential: admin.credential.cert(serviceAccountJson) });
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// In-memory conversations
 const conversations = {};
 
-// System prompt for GPT
 const SYSTEM_PROMPT = {
   role: "system",
   content: `Conversational Presence + Loop Prompt
@@ -97,32 +87,22 @@ If crisis signals appear → acknowledge, ground, suggest reaching out to truste
 If silence feels uneasy → return to breath/body gently.`
 };
 
-// Firebase ID token auth middleware
+// Firebase auth middleware
 async function authMiddleware(req, res, next) {
   const authHeader = req.headers["authorization"];
-  if (!authHeader?.startsWith("Bearer ")) {
-    return res.status(401).json({ error: "Unauthorized: Missing token" });
-  }
-
+  if (!authHeader?.startsWith("Bearer ")) return res.status(401).json({ error: "Unauthorized" });
   const idToken = authHeader.split("Bearer ")[1];
-  try {
-    const decodedToken = await admin.auth().verifyIdToken(idToken);
-    req.user = decodedToken;
-    next();
-  } catch (err) {
-    console.error("❌ Firebase auth error:", err);
-    return res.status(401).json({ error: "Unauthorized: Invalid token" });
-  }
+  try { req.user = await admin.auth().verifyIdToken(idToken); next(); } 
+  catch(err){ return res.status(401).json({ error: "Unauthorized" }); }
 }
 
-// Ask Guru endpoint
+// Ask Guru
 app.post("/ask-guru", authMiddleware, async (req, res) => {
   try {
     const { message } = req.body;
     if (!message) return res.status(400).json({ error: "Missing message" });
 
     const userId = req.user.uid;
-
     if (!conversations[userId]) conversations[userId] = [SYSTEM_PROMPT];
     conversations[userId].push({ role: "user", content: message });
 
@@ -141,22 +121,15 @@ app.post("/ask-guru", authMiddleware, async (req, res) => {
 
     const data = await result.json();
 
-    if (data.choices && data.choices[0]) {
-      conversations[userId].push({
-        role: "assistant",
-        content: data.choices[0].message.content,
-      });
-    }
+    if (data.choices && data.choices[0]) conversations[userId].push({ role: "assistant", content: data.choices[0].message.content });
 
     res.json(data);
-
   } catch (err) {
-    console.error("❌ Server error:", err);
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
 
-// Serve static files
 app.use(express.static("public"));
 
 const PORT = process.env.PORT || 3000;

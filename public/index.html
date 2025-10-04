@@ -24,7 +24,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-window.auth = auth; // make auth globally accessible for main.js
+window.auth = auth;
 
 onAuthStateChanged(auth, (user) => {
   if (!user) window.location.href = "login.html";
@@ -72,8 +72,8 @@ window.logout = () => {
   <div class="breathing-circle-chat"></div>
   <div id="welcome-chat-text" style="position: absolute; top: 20%;">Begin where you are.<br>Everything is welcome.</div>
 
-  <!-- Lyrics-style container -->
-  <div class="lyrics-container">
+  <!-- Spotify-lyrics-style container -->
+  <div class="lyrics-container" id="responseWrapper">
     <div id="responseText"></div>
   </div>
 
