@@ -195,7 +195,7 @@ async function askGuru() {
   const input = userInputEl.value.trim();
   if (!input) return;
 
-  responseEl.textContent = '🧘‍♂️ Listening....';
+  responseEl.textContent = '🧘‍♂️ Listening..';
   responseEl.style.opacity = 1;
   if (welcomeEl) welcomeEl.textContent = '';
 
