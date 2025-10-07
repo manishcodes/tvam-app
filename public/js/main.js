@@ -1,8 +1,8 @@
-// main.js - Mobile-safe Spotify-style lyrics + TTS + auto-scroll
+// main.js - TVAM frontend with clean (non-streaming) Rime.ai TTS + word highlighting
 
 // Persistent userId
 const userId = localStorage.getItem("tvam_userId") || (() => {
-  const id = (crypto && crypto.randomUUID) ? crypto.randomUUID() : ('tvam-' + Date.now() + '-' + Math.random().toString(36).slice(2,9));
+  const id = (crypto && crypto.randomUUID) ? crypto.randomUUID() : ('tvam-' + Date.now() + '-' + Math.random().toString(36).slice(2, 9));
   localStorage.setItem("tvam_userId", id);
   return id;
 })();
@@ -17,65 +17,32 @@ function escapeHtml(str = "") {
     .replace(/'/g, "&#039;");
 }
 
-// Navigation
+// --- NAVIGATION ---
 function goToScreen(n) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const el = document.getElementById('screen' + n);
   if (el) el.classList.add('active');
-
   if (n === 3) startCountdown();
-  if (n === 4) setTimeout(()=>{ const i = document.getElementById('userInput'); if(i) i.focus(); }, 200);
+  if (n === 4) setTimeout(() => {
+    const i = document.getElementById('userInput');
+    if (i) i.focus();
+  }, 200);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Buttons
   const beginBtn = document.querySelector('.begin-btn');
   if (beginBtn) beginBtn.addEventListener('click', () => goToScreen(2));
   const preludeBtn = document.getElementById('prelude-btn');
   if (preludeBtn) preludeBtn.addEventListener('click', () => goToScreen(3));
   document.querySelectorAll('.skip-btn').forEach(btn => btn.addEventListener('click', () => goToScreen(4)));
 
-  // Textarea
   const userInput = document.getElementById('userInput');
   if (userInput) {
     userInput.addEventListener('input', () => autoResize(userInput));
     userInput.addEventListener('keypress', (ev) => {
       if (ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); askGuru(); }
     });
-
-    userInput.addEventListener('focus', () => {
-      document.body.classList.add('keyboard-open');
-      setTimeout(() => {
-        const wrapper = document.getElementById('responseWrapper');
-        if (wrapper) wrapper.scrollTop = wrapper.scrollHeight;
-      }, 300);
-    });
-
-    userInput.addEventListener('blur', () => document.body.classList.remove('keyboard-open'));
     window.addEventListener('load', () => autoResize(userInput));
-  }
-
-  // visualViewport for mobile keyboard
-  if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', () => {
-      const wrapper = document.getElementById('responseWrapper');
-      const input = document.getElementById('userInput');
-      if (!wrapper || !input) return;
-
-      const vh = window.innerHeight;
-      const vvh = window.visualViewport.height;
-      if (vvh < vh - 120) { // keyboard likely open
-        document.body.classList.add('keyboard-open');
-        const wrapperRect = wrapper.getBoundingClientRect();
-        const top = Math.max(8, wrapperRect.top);
-        const available = Math.max(80, vvh - top - input.offsetHeight - 20);
-        wrapper.style.maxHeight = available + 'px';
-        wrapper.scrollTop = wrapper.scrollHeight;
-      } else {
-        document.body.classList.remove('keyboard-open');
-        wrapper.style.maxHeight = '';
-      }
-    });
   }
 });
 
@@ -99,94 +66,80 @@ function autoResize(el) {
   el.style.height = (el.scrollHeight + 2) + 'px';
 }
 
-// Smooth scroll helper
-function smoothScrollTo(el, to, duration = 360) {
-  if (!el) return;
-  const start = el.scrollTop;
-  const change = to - start;
-  const startTime = performance.now();
-  function easeInOutQuad(t) { return t < 0.5 ? 2*t*t : -1 + (4 - 2*t)*t; }
-  function animate(now) {
-    const elapsed = now - startTime;
-    const t = Math.min(1, elapsed / duration);
-    el.scrollTop = start + change * easeInOutQuad(t);
-    if (t < 1) requestAnimationFrame(animate);
-  }
-  requestAnimationFrame(animate);
-}
-
-// Auto-scroll span into view
-function autoScrollSpanIntoView(wrapper, span) {
-  if (!wrapper || !span) return;
-  const wrapperRect = wrapper.getBoundingClientRect();
-  const spanRect = span.getBoundingClientRect();
-  const offset = spanRect.top - wrapperRect.top;
-  const scrollTarget = wrapper.scrollTop + offset - wrapper.clientHeight / 2 + span.offsetHeight / 2;
-  wrapper.scrollTo({ top: scrollTarget, behavior: 'smooth' });
-}
-
-// Speak + highlight
-let currentUtterance = null;
-function speakAndHighlight(text, responseEl) {
-  if (!responseEl) return;
-  const words = String(text || "").split(/\s+/).filter(Boolean);
+// --- TTS with Highlight ---
+// --- TTS with Improved Highlight Sync ---
+async function playWithHighlight(text, responseEl) {
+  const words = String(text).split(/\s+/).filter(Boolean);
   responseEl.innerHTML = words.map(w => `<span>${escapeHtml(w)}</span>`).join(' ');
   responseEl.style.opacity = 1;
 
   const wrapper = document.getElementById('responseWrapper');
   if (wrapper) wrapper.scrollTop = 0;
 
-  if (window.speechSynthesis) window.speechSynthesis.cancel();
-  if (currentUtterance) { currentUtterance.onend = null; currentUtterance = null; }
+  // ✅ correct ws protocol
+  const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+  const ttsSocket = new WebSocket(`${protocol}://${window.location.host}/tts`);
+  ttsSocket.binaryType = "arraybuffer";
 
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = 'en-US';
-  utterance.rate = 0.85;
-  utterance.pitch = 0.95;
+  const audioChunks = [];
 
-  const spans = responseEl.querySelectorAll('span');
-  let wordIndex = 0;
+  ttsSocket.onopen = () => {
+    console.log("✅ Connected to /tts");
+    ttsSocket.send(text);
+  };
 
-  // Approximate duration per word (ms)
-  const durationPerWord = Math.max(120, (text.length * 50) / Math.max(1, words.length));
+  ttsSocket.onmessage = (event) => {
+    if (event.data instanceof ArrayBuffer) audioChunks.push(event.data);
+  };
 
-  // Highlight loop
-  const intervalId = setInterval(() => {
-    spans.forEach(s => s.classList.remove('highlight'));
-    if (spans[wordIndex]) {
-      spans[wordIndex].classList.add('highlight');
-      autoScrollSpanIntoView(wrapper, spans[wordIndex]);
+  ttsSocket.onerror = (err) => console.error("TTS socket error:", err);
+
+  ttsSocket.onclose = async () => {
+    if (audioChunks.length === 0) {
+      console.warn("⚠️ No audio chunks received from server");
+      return;
     }
-    wordIndex++;
-    if (wordIndex >= spans.length) {
-      clearInterval(intervalId);
-      spans.forEach(s => s.classList.remove('highlight'));
-    }
-  }, durationPerWord);
 
-  // Speak
-  currentUtterance = utterance;
-  try { window.speechSynthesis.speak(utterance); } catch(err){ console.error(err); }
+    const combined = new Blob(audioChunks, { type: "audio/mpeg" });
+    const url = URL.createObjectURL(combined);
+    const audio = new Audio(url);
+
+    const spans = responseEl.querySelectorAll('span');
+    let index = 0;
+
+    // Wait for metadata to load (duration)
+    audio.onloadedmetadata = () => {
+      const baseWordTime = (audio.duration * 1000) / Math.max(1, words.length);
+
+      // Add slight pause for punctuation
+      const punctuationPause = w => (/[.,!?;:]$/.test(w) ? 1.5 : 1.0);
+      let highlightTime = 0;
+
+      function highlightNext() {
+        spans.forEach(s => s.classList.remove('highlight'));
+        if (index < spans.length) {
+          spans[index].classList.add('highlight');
+          if (wrapper) wrapper.scrollTo({ top: wrapper.scrollHeight, behavior: 'smooth' });
+          const nextDelay = baseWordTime * punctuationPause(words[index]);
+          index++;
+          setTimeout(highlightNext, nextDelay);
+        }
+      }
+
+      // start highlighting once audio starts
+      audio.play()
+        .then(() => {
+          console.log("🔊 Audio started — syncing highlight now");
+          highlightNext();
+        })
+        .catch(err => console.error("Audio playback error:", err));
+
+    };
+  };
 }
 
 
-// Fallback highlight if no TTS
-function fallbackHighlight(words, responseEl) {
-  const spans = responseEl.querySelectorAll('span');
-  if (!spans || spans.length === 0) return;
-  let i = 0;
-  const iv = setInterval(() => {
-    spans.forEach(s => s.classList.remove('highlight'));
-    if (spans[i]) {
-      spans[i].classList.add('highlight');
-      autoScrollSpanIntoView(document.getElementById('responseWrapper'), spans[i]);
-    }
-    i++;
-    if (i >= spans.length) { clearInterval(iv); setTimeout(()=>spans.forEach(s=>s.classList.remove('highlight')), 300); }
-  }, 220);
-}
-
-// Ask Guru
+// --- ASK GURU ---
 async function askGuru() {
   const userInputEl = document.getElementById('userInput');
   const responseEl = document.getElementById('responseText');
@@ -200,30 +153,18 @@ async function askGuru() {
   if (welcomeEl) welcomeEl.textContent = '';
 
   try {
-    let token = null;
-    if (window.auth && window.auth.currentUser) {
-      try { token = await window.auth.currentUser.getIdToken(); } catch(e){ console.warn(e); }
-    }
-    const headers = { "Content-Type": "application/json" };
-    if (token) headers['Authorization'] = `Bearer ${token}`;
-
     const resp = await fetch('/ask-guru', {
       method: 'POST',
-      headers,
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message: input })
     });
-
-    if (!resp.ok) {
-      const txt = await resp.text();
-      let parsed = txt;
-      try { parsed = JSON.parse(txt); } catch(e){}
-      throw new Error(parsed?.error || `Server returned ${resp.status}`);
-    }
 
     const data = await resp.json();
     const content = data?.choices?.[0]?.message?.content ?? null;
     if (!content) throw new Error('No response from the guru.');
-    speakAndHighlight(content, responseEl);
+
+    // Show response + TTS
+    await playWithHighlight(content, responseEl);
 
   } catch (err) {
     console.error(err);
@@ -232,11 +173,8 @@ async function askGuru() {
   } finally {
     userInputEl.value = '';
     autoResize(userInputEl);
-    document.body.classList.remove('keyboard-open');
   }
 }
 
-// Expose globally
 window.goToScreen = goToScreen;
 window.askGuru = askGuru;
-window.speakAndHighlight = speakAndHighlight;
