@@ -68,6 +68,7 @@ function autoResize(el) {
 
 // --- TTS with Highlight ---
 // --- TTS with Improved Highlight Sync ---
+// --- iOS-Compatible TTS + Highlight ---
 async function playWithHighlight(text, responseEl) {
   const words = String(text).split(/\s+/).filter(Boolean);
   responseEl.innerHTML = words.map(w => `<span>${escapeHtml(w)}</span>`).join(' ');
@@ -76,15 +77,25 @@ async function playWithHighlight(text, responseEl) {
   const wrapper = document.getElementById('responseWrapper');
   if (wrapper) wrapper.scrollTop = 0;
 
-  // ✅ correct ws protocol
   const protocol = window.location.protocol === "https:" ? "wss" : "ws";
   const ttsSocket = new WebSocket(`${protocol}://${window.location.host}/tts`);
   ttsSocket.binaryType = "arraybuffer";
 
   const audioChunks = [];
 
-  ttsSocket.onopen = () => {
+  // 🧠 iOS audio unlocker: must run at least once
+  async function unlockAudio() {
+    return new Promise((resolve) => {
+      const temp = document.createElement("audio");
+      temp.src = "";
+      temp.play().catch(() => {}); // ignored by Safari
+      resolve();
+    });
+  }
+
+  ttsSocket.onopen = async () => {
     console.log("✅ Connected to /tts");
+    await unlockAudio(); // 🔓 unlocks iOS audio
     ttsSocket.send(text);
   };
 
@@ -102,41 +113,51 @@ async function playWithHighlight(text, responseEl) {
 
     const combined = new Blob(audioChunks, { type: "audio/mpeg" });
     const url = URL.createObjectURL(combined);
-    const audio = new Audio(url);
 
+    // Force Safari to render and decode
+    const audio = document.createElement("audio");
+    audio.src = url;
+    audio.controls = false;
+    audio.style.display = "none";
+    document.body.appendChild(audio);
+
+    // 🪄 Ensure metadata loads
     const spans = responseEl.querySelectorAll('span');
     let index = 0;
 
-    // Wait for metadata to load (duration)
-    audio.onloadedmetadata = () => {
+    function startHighlight() {
       const baseWordTime = (audio.duration * 1000) / Math.max(1, words.length);
+      const punctuationPause = (w) => (/[.,!?;:]$/.test(w) ? 1.4 : 1.0);
 
-      // Add slight pause for punctuation
-      const punctuationPause = w => (/[.,!?;:]$/.test(w) ? 1.5 : 1.0);
-      let highlightTime = 0;
-
-      function highlightNext() {
+      function step() {
         spans.forEach(s => s.classList.remove('highlight'));
         if (index < spans.length) {
           spans[index].classList.add('highlight');
-          if (wrapper) wrapper.scrollTo({ top: wrapper.scrollHeight, behavior: 'smooth' });
-          const nextDelay = baseWordTime * punctuationPause(words[index]);
+          if (wrapper)
+            wrapper.scrollTo({ top: wrapper.scrollHeight, behavior: 'smooth' });
+          const delay = baseWordTime * punctuationPause(words[index]);
           index++;
-          setTimeout(highlightNext, nextDelay);
+          setTimeout(step, delay);
         }
       }
 
-      // start highlighting once audio starts
-      audio.play()
-        .then(() => {
-          console.log("🔊 Audio started — syncing highlight now");
-          highlightNext();
-        })
-        .catch(err => console.error("Audio playback error:", err));
+      console.log("🎵 Starting highlight sync");
+      step();
+    }
 
+    // 🧘 Audio playback and sync
+    audio.oncanplaythrough = async () => {
+      try {
+        await audio.play();
+        setTimeout(startHighlight, 300); // slight delay for sync
+      } catch (err) {
+        console.error("Audio playback blocked:", err);
+        alert("🔇 Tap anywhere to enable sound (Safari restriction).");
+      }
     };
   };
 }
+
 
 
 // --- ASK GURU ---
