@@ -600,3 +600,94 @@ footer p {
 /* If your button still looks off, remove any inline width styling in HTML:
    <button class="primary-btn"> -> keep as-is (no style="...") */
 
+   /* ---------- STEP 2: ChatGPT-Style Input Bar (Refined) ---------- */
+.chat-input-container {
+  position: fixed;
+  bottom: 55px; /* ⬆️ lifted above footer */
+  width: 100%;
+  padding: 12px 16px;
+  background: linear-gradient(to top, rgba(238,238,238,1) 90%, rgba(238,238,238,0) 100%);
+  display: flex;
+  justify-content: center;
+  z-index: 10;
+}
+
+.chat-input-wrapper {
+  display: flex;
+  align-items: center; /* ✅ centers textarea vertically */
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 25px;
+  width: 100%;
+  max-width: 700px;
+  padding: 8px 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.chat-input-wrapper textarea {
+  flex: 1;
+  border: none;
+  outline: none;
+  resize: none;
+  font-size: 1rem;
+  font-family: 'Roboto', sans-serif;
+  padding: 8px 10px;
+  max-height: 140px;
+  overflow-y: auto;
+  background: transparent;
+  color: #000;
+  line-height: 1.5; /* ✅ improves vertical alignment */
+  vertical-align: middle; /* extra insurance */
+}
+
+.chat-input-wrapper textarea::placeholder {
+  color: #999;
+  vertical-align: middle;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 50%;
+  transition: background 0.2s ease;
+}
+
+.icon-btn img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.mic-btn img {
+  filter: brightness(0);
+}
+
+.send-btn {
+  /* background-color: #d9a341; */
+  margin-left: 6px;
+}
+
+.send-btn:hover {
+  background-color: #deb970;
+}
+
+@media (max-width: 480px) {
+  .chat-input-container {
+    bottom: 50px; /* slightly closer to footer for mobile */
+    padding: 8px 10px;
+  }
+  .chat-input-wrapper {
+    padding: 6px 10px;
+    border-radius: 20px;
+  }
+  .chat-input-wrapper textarea {
+    font-size: 0.95rem;
+  }
+}
+

@@ -77,9 +77,15 @@ window.logout = () => {
     <div id="responseText"></div>
   </div>
 
-  <div class="input-container">
-    <textarea id="userInput" rows="1" placeholder="Type or speak what's on your mind"></textarea>
+ <!-- Modern Chat Input -->
+<div class="chat-input-container">
+  <div class="chat-input-wrapper">
+    <button id="mic-btn" class="icon-btn mic-btn" title="Speak"><img src="assets/mic.svg" alt="Mic" /></button>
+    <textarea id="userInput" rows="1" placeholder="What's on your mind"></textarea>
+    <button id="send-btn" class="icon-btn send-btn" title="Send"><img src="assets/send.svg" alt="Send" /></button>
   </div>
+</div>
+
   <button onclick="logout()" class="logout-btn" style="margin-top:10px;">Logout</button>
 </div>
 

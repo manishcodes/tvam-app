@@ -144,6 +144,22 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     window.addEventListener("load", () => autoResize(userInput));
   }
+
+    // Mic and Send button listeners
+  const micBtn = document.getElementById("mic-btn");
+  const sendBtn = document.getElementById("send-btn");
+
+  if (micBtn) {
+    micBtn.addEventListener("click", () => {
+      console.log("🎤 Mic button clicked — (voice input feature coming soon)");
+      // Future: start/stop recording audio and transcribe
+    });
+  }
+
+  if (sendBtn) {
+    sendBtn.addEventListener("click", () => askGuru());
+  }
+
 });
 
 // -----------------------------------------------------------
