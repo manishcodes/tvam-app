@@ -255,8 +255,11 @@ async function playWithHighlight(text, responseEl) {
           spans.forEach((s) => s.classList.remove("highlight"));
           if (index < spans.length) {
             spans[index].classList.add("highlight");
-            if (wrapper)
-              wrapper.scrollTo({ top: wrapper.scrollHeight, behavior: "smooth" });
+           if (wrapper) {
+  const scrollTarget = Math.max(0, wrapper.scrollHeight - wrapper.clientHeight * 0.5);
+  wrapper.scrollTo({ top: scrollTarget, behavior: "smooth" });
+}
+
             const delay = baseWordTime * punctuationPause(words[index]);
             index++;
             setTimeout(highlightNext, delay);
