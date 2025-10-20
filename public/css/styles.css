@@ -172,10 +172,10 @@ button:hover,
 
 
 #responseText {
-  font-size: 1.5rem;
+  font-size: 1.9rem;
   font-weight: 500;
-  color: #d9a341;
-  text-align: center;
+  color: #d9a441;
+  text-align: justify;
   line-height: 1.6;
   overflow-y: visible;
   padding: 0 0.5rem;
@@ -183,7 +183,7 @@ button:hover,
 }
 
 #responseText span {
-  opacity: 0.4;
+  opacity: 1;
   transition: color 0.3s, opacity 0.3s;
 }
 
