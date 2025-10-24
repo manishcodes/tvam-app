@@ -1,0 +1,360 @@
+/* ---------------------- LOGIN PAGE ---------------------- */
+.login-body {
+  background-color: #f5f5f5;
+  font-family: 'Roboto', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 400px;
+  padding: 1rem;
+}
+
+.login-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.login-logo {
+  width: 60px;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.login-header h2 {
+  font-weight: 500;
+  margin: 0;
+  color: #202124;
+}
+
+.login-subtitle {
+  font-size: 14px;
+  color: #5f6368;
+  margin-top: 4px;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px 8px;
+  font-size: 16px;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input-group input:focus {
+  border-color: #1a73e8;
+}
+
+.input-group label {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: #80868b;
+  font-size: 14px;
+  pointer-events: none;
+  transition: 0.2s ease all;
+}
+
+.input-group input:focus + label,
+.input-group input:valid + label {
+  top: -10px;
+  left: 8px;
+  font-size: 12px;
+  color: #1a73e8;
+  background: white;
+  padding: 0 4px;
+}
+
+/* TVAM brand color for primary buttons */
+.google-btn {
+  background-color: #d9a341;  /* gold */
+  color: #000;                /* black text for contrast */
+  border: none;
+  border-radius: 4px;
+  width: 100%;
+  padding: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.1s ease-in-out;
+}
+
+.google-btn:hover {
+  background-color: #c7973a;  /* slightly darker on hover */
+  transform: translateY(-1px);
+}
+
+.google-btn:active {
+  background-color: #b88a33;
+  transform: translateY(0);
+}
+
+
+.divider {
+  text-align: center;
+  position: relative;
+  margin: 1.5rem 0;
+  width: 100%;
+}
+
+.divider span {
+  background: white;
+  color: #5f6368;
+  padding: 0 10px;
+  position: relative;
+  z-index: 2;
+}
+
+.divider::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: #dadce0;
+  z-index: 1;
+}
+
+.google-signin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: white;
+  color: #3c4043;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  padding: 10px;
+  width: 100%;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 15px;
+}
+
+.google-signin img {
+  width: 18px;
+  height: 18px;
+}
+
+.google-signin:hover {
+  background: #f8f9fa;
+}
+
+.signup-text {
+  margin-top: 1rem;
+  font-size: 14px;
+  color: #5f6368;
+}
+
+.signup-text a {
+  color: #1a73e8;
+  text-decoration: none;
+}
+
+.signup-text a:hover {
+  text-decoration: underline;
+}
+
+/* ---------------------- SIGNUP MODAL ---------------------- */
+.signup-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: 0.3s;
+  z-index: 1000;
+}
+
+.signup-modal.open {
+  visibility: visible;
+  opacity: 1;
+}
+
+.signup-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  padding: 2rem;
+  width: 90%;
+  max-width: 400px;
+}
+
+.signup-card h3 {
+  text-align: center;
+  color: #202124;
+  margin-bottom: 1rem;
+}
+
+.signup-card form input {
+  width: 100%;
+  margin-bottom: 0.9rem;
+  padding: 10px;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.cancel-btn {
+  margin-top: 0.5rem;
+  background: #f1f3f4;
+  color: #3c4043;
+  border: none;
+  width: 100%;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.cancel-btn:hover {
+  background: #e8eaed;
+}
+
+/* --- Fix spacing between Create Account & Cancel buttons --- */
+.signup-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem; /* adds clean vertical space between stacked elements */
+}
+
+/* Optional: extra breathing room at the bottom of modal */
+.signup-card {
+  padding-bottom: 2rem;
+}
+
+/* Ensure both buttons are full-width and visually balanced */
+.signup-card form .primary-btn,
+.signup-card form .cancel-btn {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* --- Reduce shadow & spacing for modal action buttons only --- */
+.signup-card form button {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1),
+              inset 0 1px 3px rgba(255, 255, 255, 0.05);
+  margin: 0.4rem 0; /* ⬇️ tighter vertical spacing */
+  border-radius: 6px; /* a softer, flatter shape */
+  padding: 0.7rem 1.2rem;
+}
+
+
+
+/* ---------------------- RESPONSIVENESS ---------------------- */
+@media (max-width: 480px) {
+  .login-card {
+    padding: 1.5rem;
+  }
+
+  .login-header h2 {
+    font-size: 1.2rem;
+  }
+
+  .login-subtitle {
+    font-size: 12px;
+  }
+}
+
+/* --- Fix: ensure full-width alignment for inputs + buttons --- */
+
+/* Make the card and form stack items with consistent full width */
+.login-card,
+.login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch; /* IMPORTANT: makes children fill width */
+  gap: 0.75rem;
+  box-sizing: border-box;
+}
+
+/* Ensure input groups occupy full width */
+.input-group {
+  width: 100%;
+  margin: 0;
+}
+
+/* Inputs keep their styles but box-sizing ensures correct width */
+.input-group input {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+/* Primary / action buttons should be full width and aligned */
+.primary-btn,
+.google-btn,
+.google-signin,
+.cancel-btn {
+  box-sizing: border-box;
+  width: 100%;
+  display: inline-block;
+  margin: 0;           /* remove stray margins that cause offsets */
+  padding-left: 12px;  /* match input left padding for visual alignment */
+  padding-right: 12px; /* ensure visual balance */
+}
+
+/* If labels or other elements add horizontal padding, align with inputs */
+.login-card {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+/* On small screens, reduce side padding so everything still aligns */
+@media (max-width: 480px) {
+  .login-card {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* Optional: ensure the floating label doesn't push layout sideways */
+.input-group label {
+  left: 12px;
+}
+
+/* --- Footer --- */
+footer {
+  text-align: center;
+  padding: 8px 0;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  background: transparent;
+}
+
+footer p {
+  margin: 0;
+  font-size: 10px;
+  color: #080808;
+}

@@ -37,62 +37,73 @@ window.logout = () => {
 </head>
 <body>
 
-<!-- Splash Screen -->
+<!-- SCREEN 1: Welcome -->
 <div class="screen active" id="screen1">
-  <img src="assets/beginInwardsLogo.png" alt="TVAM Logo" style="height: 50px; padding-bottom: 10px;" />
-  <img src="assets/TVAM.png" alt="TVAM Logo" style="height: 40px;" />
-  <p style="color: #d8a441;font-size: 16.5px; margin: 10px 0 5px 0;">An Inner Life Companion</p>
-  <p style="color: #BABABA;font-size:13.5px; font-style: italic; margin: 0;">Guiding people from noise to clarity</p>
-  <button class="circle-button begin-btn">Begin</button>
-  <button onclick="logout()" class="logout-btn" style="margin-top:10px;">Logout</button>
+  <div class="welcome-panel">
+    <img src="assets/TVAM.png" alt="TVAM Logo" class="welcome-logo-main" />
+    <p class="welcome-subtitle">An Inner Life Companion</p>
+    <p class="welcome-tagline">Guiding people from noise to clarity</p>
+    <button class="begin-btn">Begin</button>
+  </div>
+  <button onclick="logout()" class="logout-btn">&#x23FB;</button>
 </div>
 
-<!-- Prelude Screen -->
+<!-- SCREEN 2: Prelude -->
 <div class="screen" id="screen2">
-  <img src="assets/TVAM.png" alt="TVAM Logo" style="height: 20px;top: 10px;" />
-  <p style="margin: 45px 0 100px 0;">Before you step in, let the breath soften, and stillness return.</p>
-  <button class="circle-button" id="prelude-btn">Begin Prelude</button>
-  <button class="skip-btn" style="border-radius: 15px;">Skip to app &gt;&gt;</button>
-  <button onclick="logout()" class="logout-btn" style="margin-top:10px;">Logout</button>
+  <div class="welcome-panel">
+    <img src="assets/TVAM.png" alt="TVAM Logo" class="welcome-logo-main" />
+    <p class="welcome-subtitle">Before you step in</p>
+    <p class="welcome-tagline">Let the breath soften, and stillness return.</p>
+    <button id="prelude-btn">Begin Prelude</button>
+    <button class="skip-btn">Skip to app &gt;&gt;</button>
+  </div>
+  <button onclick="logout()" class="logout-btn">&#x23FB;</button>
 </div>
 
-<!-- Breathing Timer Screen -->
+<!-- SCREEN 3: Breathing Timer -->
 <div class="screen" id="screen3">
-  <img src="assets/TVAM.png" alt="TVAM Logo" style="height: 20px;top: 10px;" />
-  <p style="margin: 45px 0 100px 0;">Let it settle...<br>Notice the breath.</p>
-  <div class="breathing-circle"><span id="breathingText">Breathe In</span></div>
-  <div class="countdown" id="countdown">60</div>
-  <button class="skip-btn">Skip to app &gt;&gt;</button>
-  <button onclick="logout()" class="logout-btn" style="margin-top:10px;">Logout</button>
+  <div class="welcome-panel">
+    <img src="assets/TVAM.png" alt="TVAM Logo" class="welcome-logo-main" />
+    <p class="welcome-subtitle">Let it settle...</p>
+    <p class="welcome-tagline">Notice the breath.</p>
+    <div class="breathing-circle"><span id="breathingText">Breathe In</span></div>
+    <div class="countdown" id="countdown">60</div>
+    <button class="skip-btn">Skip to app &gt;&gt;</button>
+  </div>
+  <button onclick="logout()" class="logout-btn">&#x23FB;</button>
 </div>
 
-<!-- Spiritual Guru Chat Screen -->
+<!-- SCREEN 4: Spiritual Guru Chat -->
 <div class="screen" id="screen4">
-  <img src="assets/TVAM.png" alt="TVAM Logo" style="height: 20px;top: 10px;" />
+  <img src="assets/TVAM.png" alt="TVAM Logo" style="height: 20px; top: 10px;" />
   <div class="breathing-circle-chat"></div>
-  <div id="welcome-chat-text" style="position: absolute; top: 20%;">Begin where you are.<br>Everything is welcome.</div>
+  <div id="welcome-chat-text" style="position: absolute; top: 20%;">
+    Begin where you are.<br>Everything is welcome.
+  </div>
 
   <!-- Guru Response Area -->
-<div class="guru-response-zone">
-  <div id="responseWrapper" class="guru-response-wrapper">
-    <div class="fade-mask top-fade"></div>
-    <div id="responseText" class="guru-response-text"></div>
-    <div class="fade-mask bottom-fade"></div>
+  <div class="guru-response-zone">
+    <div id="responseWrapper" class="guru-response-wrapper">
+      <div class="fade-mask top-fade"></div>
+      <div id="responseText" class="guru-response-text"></div>
+      <div class="fade-mask bottom-fade"></div>
+    </div>
   </div>
-</div>
 
-
-
- <!-- Modern Chat Input -->
-<div class="chat-input-container">
-  <div class="chat-input-wrapper">
-    <button id="mic-btn" class="icon-btn mic-btn" title="Speak"><img src="assets/mic.svg" alt="Mic" /></button>
-    <textarea id="userInput" rows="1" placeholder="What's on your mind"></textarea>
-    <button id="send-btn" class="icon-btn send-btn" title="Send"><img src="assets/send.svg" alt="Send" /></button>
+  <!-- Chat Input -->
+  <div class="chat-input-container">
+    <div class="chat-input-wrapper">
+      <button id="mic-btn" class="icon-btn mic-btn" title="Speak">
+        <img src="assets/mic.svg" alt="Mic" />
+      </button>
+      <textarea id="userInput" rows="1" placeholder="What's on your mind"></textarea>
+      <button id="send-btn" class="icon-btn send-btn" title="Send">
+        <img src="assets/send.svg" alt="Send" />
+      </button>
+    </div>
   </div>
-</div>
 
-  <button onclick="logout()" class="logout-btn" style="margin-top:10px;">Logout</button>
+  <button onclick="logout()" class="logout-btn">&#x23FB;</button>
 </div>
 
 <footer>
