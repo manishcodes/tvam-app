@@ -556,11 +556,11 @@ textarea {
 /* Countdown positioned between the circle and Skip button */
 #screen3 .countdown {
   position: absolute;
-  top: calc(25% + 180px); /* ✅ maintains gap below circle */
+  /* top: calc(25% + 180px); ✅ maintains gap below circle */
   left: 50%;
   transform: translateX(-50%);
   font-size: clamp(2.2rem, 4.5vw, 3.8rem);
-  color: #9a9a9a;
+  color: #000000;
   font-weight: 300;
   text-align: center;
 }
@@ -597,10 +597,10 @@ textarea {
     top: 38%;
   }
 
-  #screen3 .countdown {
+  /* #screen3 .countdown {
     top: calc(38% + 150px);
     font-size: 2.5rem;
-  }
+  } */
 
   #screen3 .skip-btn {
     font-size: 14px;
@@ -620,10 +620,10 @@ textarea {
     top: 40%;
   }
 
-  #screen3 .countdown {
+  /* #screen3 .countdown {
     top: calc(40% + 130px);
     font-size: 2.2rem;
-  }
+  } */
 
   #screen3 .skip-btn {
     font-size: 13.5px;
