@@ -1,115 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>TVAM</title>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TVAM</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
 
-<!-- Firebase SDK -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCPCRnEl01GaxbfC5EwWhen_DUOLE2-wZA",
-  authDomain: "mytvam-app.firebaseapp.com",
-  projectId: "mytvam-app",
-  storageBucket: "mytvam-app.firebasestorage.app",
-  messagingSenderId: "336382893777",
-  appId: "1:336382893777:web:6684804f2c94c101636ff0",
-  measurementId: "G-EETD3SZX43"
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyCPCRnEl01GaxbfC5EwWhen_DUOLE2-wZA",
+      authDomain: "mytvam-app.firebaseapp.com",
+      projectId: "mytvam-app",
+      storageBucket: "mytvam-app.firebasestorage.app",
+      messagingSenderId: "336382893777",
+      appId: "1:336382893777:web:6684804f2c94c101636ff0",
+      measurementId: "G-EETD3SZX43"
+    };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-window.auth = auth;
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    window.auth = auth;
 
-onAuthStateChanged(auth, (user) => {
-  if (!user) window.location.href = "login.html";
-});
+    onAuthStateChanged(auth, (user) => {
+      if (!user) window.location.href = "login.html";
+    });
 
-window.logout = () => {
-  signOut(auth).then(() => window.location.href = "login.html");
-};
-</script>
+    window.logout = () => {
+      signOut(auth).then(() => window.location.href = "login.html");
+    };
+  </script>
 </head>
+
 <body>
 
-<!-- SCREEN 1: Welcome -->
-<div class="screen active" id="screen1">
-  <div class="welcome-panel">
-    <img src="assets/TVAM.png" alt="TVAM Logo" class="welcome-logo-main" />
-    <p class="welcome-subtitle">An Inner Life Companion</p>
-    <p class="welcome-tagline">Guiding people from noise to clarity</p>
-    <button class="begin-btn">Begin</button>
-  </div>
-  <button onclick="logout()" class="logout-btn">⏻</button>
-</div>
-
-<!-- SCREEN 2: Prelude -->
-<div class="screen" id="screen2">
-  <div class="welcome-panel">
-    <img src="assets/TVAM.png" alt="TVAM Logo" class="welcome-logo-main" />
-    <p class="welcome-subtitle">Before you step in</p>
-    <p class="welcome-tagline">Let the breath soften, and stillness return.</p>
-    <button id="prelude-btn">Begin Prelude</button>
-    <button class="skip-btn">Skip to app &gt;&gt;</button>
-  </div>
-  <button onclick="logout()" class="logout-btn">⏻</button>
-</div>
-
-<!-- SCREEN 3: Breathing Timer -->
-<div class="screen" id="screen3">
-  <div class="welcome-panel">
-    <img src="assets/TVAM.png" alt="TVAM Logo" class="welcome-logo-main" />
-    <p class="welcome-subtitle">Let it settle...</p>
-    <p class="welcome-tagline">Notice the breath.</p>
-    <div class="breathing-circle"><span id="breathingText">Breathe In</span></div>
-    <div class="countdown" id="countdown">60</div>
-    <button class="skip-btn">Skip to app &gt;&gt;</button>
-  </div>
-  <button onclick="logout()" class="logout-btn">⏻</button>
-</div>
-
-<!-- SCREEN 4: Spiritual Guru Chat -->
-<div class="screen" id="screen4">
-  <img src="assets/TVAM.png" alt="TVAM Logo" style="height: 20px; top: 10px;" />
-  <div class="breathing-circle-chat"></div>
-  <div id="welcome-chat-text" style="position: absolute; top: 20%;">
-    Begin where you are.<br>Everything is welcome.
-  </div>
-
-  <!-- Guru Response Area -->
-  <div class="guru-response-zone">
-    <div id="responseWrapper" class="guru-response-wrapper">
-      <div class="fade-mask top-fade"></div>
-      <div id="responseText" class="guru-response-text"></div>
-      <div class="fade-mask bottom-fade"></div>
+  <!-- SCREEN 1: Welcome -->
+  <div class="screen active" id="screen1">
+    <div class="welcome-panel">
+      <img src="assets/TVAM.png" alt="TVAM Logo" class="welcome-logo-main" />
+      <p class="welcome-subtitle">REFLECTING INWARDS</p>
+      <p class="welcome-tagline">Helping people move from mental noise to inner clarity</p>
+      <button class="begin-btn">Begin</button>
     </div>
+    <button onclick="openFeedback()" class="feedback-btn" title="Feedback">
+      <img src="assets/feedback.png" alt="Feedback" />
+    </button>
+
   </div>
 
-  <!-- Chat Input -->
-  <div class="chat-input-container">
-    <div class="chat-input-wrapper">
-      <button id="mic-btn" class="icon-btn mic-btn" title="Speak">
-        <img src="assets/mic.svg" alt="Mic" />
-      </button>
-      <textarea id="userInput" rows="1" placeholder="What's on your mind"></textarea>
-      <button id="send-btn" class="icon-btn send-btn" title="Send">
-        <img src="assets/send.svg" alt="Send" />
-      </button>
+  <!-- SCREEN 2: Prelude -->
+  <div class="screen" id="screen2">
+    <div class="welcome-panel">
+      <img src="assets/TVAM.png" alt="TVAM Logo" class="welcome-logo-main" />
+      <p class="welcome-subtitle">Before you step in</p>
+      <p class="welcome-tagline">Let the breath soften, and stillness return.</p>
+      <button id="prelude-btn">Begin Prelude</button>
+      <button class="skip-btn">Skip to app &gt;&gt;</button>
     </div>
+    <button onclick="openFeedback()" class="feedback-btn" title="Feedback">
+      <img src="assets/feedback.png" alt="Feedback" />
+    </button>
   </div>
 
-  <button onclick="logout()" class="logout-btn">⏻</button>
-</div>
+  <!-- SCREEN 3: Breathing Timer -->
+  <div class="screen" id="screen3">
+    <div class="welcome-panel">
+      <img src="assets/TVAM.png" alt="TVAM Logo" class="welcome-logo-main" />
+      <p class="welcome-subtitle">Let it settle...</p>
+      <p class="welcome-tagline">Notice the breath.</p>
+      <div class="breathing-circle"><span id="breathingText">Breathe In</span></div>
+      <div class="countdown" id="countdown">60</div>
+      <button class="skip-btn">Skip to app &gt;&gt;</button>
+    </div>
+    <button onclick="openFeedback()" class="feedback-btn" title="Feedback">
+      <img src="assets/feedback.png" alt="Feedback" />
+    </button>
+  </div>
 
-<footer>
-  <p class="copyright">© 2025 Begin Inwards, Inc. All rights reserved.</p>
-</footer>
+  <!-- SCREEN 4: Spiritual Guru Chat -->
+  <div class="screen" id="screen4">
+    <img src="assets/TVAM.png" alt="TVAM Logo" style="height: 20px; top: 10px;" />
+    <div class="breathing-circle-chat"></div>
+    <div id="welcome-chat-text" style="position: absolute; top: 20%;">
+      Begin where you are.<br>Everything is welcome.
+    </div>
 
-<script type="module" src="js/main.js"></script>
+    <!-- Guru Response Area -->
+    <div class="guru-response-zone">
+      <div id="responseWrapper" class="guru-response-wrapper">
+        <div class="fade-mask top-fade"></div>
+        <div id="responseText" class="guru-response-text"></div>
+        <div class="fade-mask bottom-fade"></div>
+      </div>
+    </div>
+
+    <!-- Chat Input -->
+    <div class="chat-input-container">
+      <div class="chat-input-wrapper">
+        <button id="mic-btn" class="icon-btn mic-btn" title="Speak">
+          <img src="assets/mic.svg" alt="Mic" />
+        </button>
+        <textarea id="userInput" rows="1" placeholder="What's on your mind"></textarea>
+        <button id="send-btn" class="icon-btn send-btn" title="Send">
+          <img src="assets/send.svg" alt="Send" />
+        </button>
+      </div>
+    </div>
+
+    <button onclick="openFeedback()" class="feedback-btn" title="Feedback">
+      <img src="assets/feedback.png" alt="Feedback" />
+    </button>
+  </div>
+
+  <footer class="footer">
+    <p class="copyright">© 2025 Begin Inwards, Inc. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="terms.html">Terms & Conditions</a>
+      <span>|</span>
+      <a href="privacy.html">Privacy Policy</a>
+      <span>|</span>
+      <a href="#" onclick="logout()">Logout</a>
+    </div>
+  </footer>
+
+
+  <script type="module" src="js/main.js"></script>
 </body>
+
 </html>

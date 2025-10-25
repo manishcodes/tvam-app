@@ -310,6 +310,14 @@ async function playWithHighlight(text, responseEl) {
 }
 
 // -----------------------------------------------------------
+// Feedback form
+// -----------------------------------------------------------
+window.openFeedback = () => {
+  window.open("https://docs.google.com/forms/d/e/1FAIpQLSfuYEf-BPLp1GdCUfsVZKOCC9_hwY6iDdSCUpwvaNnfCwmM3A/viewform?usp=dialog", "_blank");
+};
+
+
+// -----------------------------------------------------------
 // Ask Guru
 // -----------------------------------------------------------
 async function askGuru() {
