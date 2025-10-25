@@ -87,7 +87,7 @@ button:hover,
   width: 140px;
   height: 140px;
   border-radius: 100%;
-  background: #e69f35;
+  background: #d9a341;
   position: relative;
   display: flex;
   justify-content: center;
@@ -452,7 +452,7 @@ footer p {
   margin-top: 6vh;
 }
 
-/* ---------- SCREEN 3: Breathing Panel (same size as Screen 1 & 2) ---------- */
+/* ---------- SCREEN 3: Breathing Panel (aligned perfectly with Screen 2) ---------- */
 #screen3 .welcome-panel {
   background: #fff;
   border-radius: 12px;
@@ -465,24 +465,46 @@ footer p {
   height: 80%;
   max-width: 900px;
   margin: auto;
-  padding: 3rem 2rem 4rem 2rem;
+  padding: 2.5rem 2rem 4rem 2rem;
   text-align: center;
   position: relative;
   box-sizing: border-box;
 }
 
-/* Breathing circle centered */
+/* Logo + subtitle + tagline positioned exactly like Screen 2 */
+#screen3 .welcome-logo-main {
+  height: 45px;
+  margin-bottom: 10px;
+}
+
+#screen3 .welcome-subtitle {
+  color: #d9a341;
+  font-size: 17px;
+  font-weight: 500;
+  margin: 8px 0 4px 0;
+}
+
+#screen3 .welcome-tagline {
+  color: #9a9a9a;
+  font-size: 14px;
+  font-style: italic;
+  margin: 0 0 40px 0;
+}
+
+/* Breathing circle placed exactly where Prelude button was (same top offset and size) */
 #screen3 .breathing-circle {
   width: 140px;
   height: 140px;
   border-radius: 50%;
-  background: #e69f35;
+  background: #d9a341;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 6vh;
+  position: absolute;
+  top: 35%; /* ✅ same as #prelude-btn top */
+  left: 50%;
+  transform: translateX(-50%);
   flex-shrink: 0;
-  position: relative;
 }
 
 #screen3 .breathing-circle::before {
@@ -495,17 +517,26 @@ footer p {
   animation: pulse 12s ease-in-out infinite;
 }
 
-/* Countdown centered between breathing circle and Skip button */
-#screen3 .countdown {
-  font-size: clamp(2.2rem, 4.5vw, 3.8rem);
-  color: #000;
-  font-weight: 600;
-  text-align: center;
-  margin: 4vh 0;
-  flex-shrink: 0;
+#screen3 .breathing-circle span {
+  font-size: 1.1rem;
+  color: #000000;
+  position: relative;
+  z-index: 2;
 }
 
-/* Skip button same styling as Begin */
+/* Countdown positioned between the circle and Skip button */
+#screen3 .countdown {
+  position: absolute;
+  top: calc(25% + 180px); /* ✅ maintains gap below circle */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+  color: #9a9a9a;
+  font-weight: 300;
+  text-align: center;
+}
+
+/* Skip button aligned like Begin button */
 #screen3 .skip-btn {
   position: absolute;
   bottom: 10px;
@@ -519,18 +550,54 @@ footer p {
   box-shadow: none;
   transition: background-color 0.2s ease, transform 0.12s ease;
 }
-#screen3 .skip-btn:hover { background-color: #f5e4c0; transform: scale(1.02); }
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  #screen3 .welcome-panel { width: 85%; padding: 2.5rem 1.5rem 3rem 1.5rem; }
-  #screen3 .breathing-circle { width: 120px; height: 120px; margin-top: 5vh; }
-  #screen3 .countdown { font-size: 2.5rem; margin: 3vh 0; }
-  #screen3 .skip-btn { font-size: 14px; padding: 0.7rem 1.8rem; }
+#screen3 .skip-btn:hover {
+  background-color: #f5e4c0;
+  transform: scale(1.02);
 }
+
+/* ---------- Responsive adjustments ---------- */
+@media (max-width: 768px) {
+  #screen3 .welcome-panel {
+    width: 85%;
+    padding: 2rem 1.5rem 3rem 1.5rem;
+  }
+
+  #screen3 .breathing-circle {
+    width: 120px;
+    height: 120px;
+    top: 38%;
+  }
+
+  #screen3 .countdown {
+    top: calc(38% + 150px);
+    font-size: 2.5rem;
+  }
+
+  #screen3 .skip-btn {
+    font-size: 14px;
+    padding: 0.7rem 1.8rem;
+  }
+}
+
 @media (max-width: 480px) {
-  #screen3 .welcome-panel { width: 90%; padding: 2rem 1rem 3rem 1rem; }
-  #screen3 .breathing-circle { width: 100px; height: 100px; margin-top: 6vh; }
-  #screen3 .countdown { font-size: 2.1rem; margin: 2.5vh 0; }
-  #screen3 .skip-btn { font-size: 13.5px; padding: 0.6rem 1.6rem; }
+  #screen3 .welcome-panel {
+    width: 90%;
+    padding: 2rem 1rem 3rem 1rem;
+  }
+
+  #screen3 .breathing-circle {
+    width: 100px;
+    height: 100px;
+    top: 40%;
+  }
+
+  #screen3 .countdown {
+    top: calc(40% + 130px);
+    font-size: 2.2rem;
+  }
+
+  #screen3 .skip-btn {
+    font-size: 13.5px;
+    padding: 0.6rem 1.6rem;
+  }
 }

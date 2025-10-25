@@ -106,12 +106,20 @@ function goToScreen(n) {
   document.querySelectorAll(".screen").forEach((s) => s.classList.remove("active"));
   const el = document.getElementById("screen" + n);
   if (el) el.classList.add("active");
-  if (n === 3) startCountdown();
-  if (n === 4) setTimeout(() => {
-    const i = document.getElementById("userInput");
-    if (i) i.focus();
-  }, 200);
+
+  if (n === 3) {
+    startCountdown();
+    startBreathingAnimation(); // ✅ add this line only
+  }
+
+  if (n === 4) {
+    setTimeout(() => {
+      const i = document.getElementById("userInput");
+      if (i) i.focus();
+    }, 200);
+  }
 }
+
 
 // -----------------------------------------------------------
 // Setup buttons and listeners
@@ -179,6 +187,32 @@ function startCountdown() {
     }
   }, 1000);
 }
+
+// -----------------------------------------------------------
+// Breathing Animation Sync (Breathe In / Breathe Out)
+// -----------------------------------------------------------
+function startBreathingAnimation() {
+  const breathingText = document.getElementById("breathingText");
+  const circle = document.querySelector("#screen3 .breathing-circle");
+  if (!breathingText || !circle) return;
+
+  let isBreathingIn = true;
+
+  // Match CSS pulse timing (12s cycle → 6s in + 6s out)
+  const inhaleDuration = 6000;
+  const exhaleDuration = 6000;
+
+  breathingText.textContent = "Breathe In";
+
+  function cycleBreath() {
+    breathingText.textContent = isBreathingIn ? "Breathe In" : "Breathe Out";
+    isBreathingIn = !isBreathingIn;
+    setTimeout(cycleBreath, isBreathingIn ? inhaleDuration : exhaleDuration);
+  }
+
+  setTimeout(cycleBreath, inhaleDuration);
+}
+
 
 // -----------------------------------------------------------
 // Textarea Autosize
