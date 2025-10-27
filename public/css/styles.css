@@ -75,7 +75,7 @@ button:hover,
 
 .skip-btn {
   background-color: #eeeeee;
-  border-radius: 15px;
+  border-radius: 12px;
   border-style: solid;
   border-color: #d9a341;
   position: absolute;
@@ -216,7 +216,7 @@ textarea {
   left: 0;
   width: 100%;
   background: #f8f9fa;
-  border-top: 1px solid #d9a441;
+  border-top: 1px solid #ddd;
   padding: 8px 20px;
   font-size: 0.85rem;
   display: flex;
@@ -224,6 +224,9 @@ textarea {
   align-items: center;
   color: #444;
   z-index: 100;
+
+  /* ✨ Add soft top shadow */
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .footer-links {
@@ -369,7 +372,7 @@ textarea {
   position: absolute; bottom: 10px;
   height: 48px; min-width: 160px; padding: 0 20px;
   background-color: #eeeeee;
-  border: 2px solid #d9a341; color: #000; border-radius: 15px;
+  border: 2px solid #d9a341; color: #000; border-radius: 12px;
   cursor: pointer; box-shadow: none;
   transition: background-color 0.18s ease, transform 0.12s ease;
 }
@@ -443,7 +446,7 @@ textarea {
   background-color: #eeeeee;
   border: 2px solid #d9a341;
   color: #000;
-  border-radius: 15px;
+  border-radius: 12px;
   padding: 0.8rem 2rem;
   font-size: 15px;
   cursor: pointer;
@@ -587,7 +590,7 @@ textarea {
   background-color: #eeeeee;
   border: 2px solid #d9a341;
   color: #000;
-  border-radius: 15px;
+  border-radius: 12px;
   padding: 0.8rem 2rem;
   font-size: 15px;
   cursor: pointer;
@@ -651,13 +654,13 @@ textarea {
   top: 10px;
   right: 10px;
   background: none;
-  border: 2px;
+  border: 1px;
   border-style: solid;
   cursor: pointer;
   padding: 8px;
-  border-radius: 50%;
+  border-radius: 12px;
   transition: background 0.2s ease;
-  border-color: #d8a441;
+  border-color: #d9a341;
 }
 
 .feedback-btn:hover {

@@ -197,7 +197,7 @@ wss.on("connection", (clientWs) => {
     console.log(`🗣️ Sending text to Rime.ai: ${text}`);
 
     // Connect to Rime.ai
-    const rimeWs = new WebSocket("wss://users.rime.ai/ws?speaker=cove&modelId=mistv2&audioFormat=mp3", {
+    const rimeWs = new WebSocket("wss://users.rime.ai/ws?speaker=marge&modelId=mistv2&audioFormat=mp3", {
       headers: { Authorization: `Bearer ${process.env.RIME_API_KEY}` },
     });
 
