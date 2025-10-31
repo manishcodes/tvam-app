@@ -355,5 +355,85 @@ async function askGuru() {
   }
 }
 
+// -----------------------------------------------------------
+// 🎤 Voice Input (Speech-to-Text)
+// -----------------------------------------------------------
+let recognition;
+let isListening = false;
+
+function initSpeechRecognition() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    alert("Speech recognition not supported in this browser. Please use Chrome or Edge.");
+    return null;
+  }
+
+  const recog = new SpeechRecognition();
+  recog.lang = "en-US";
+  recog.continuous = true;       // keeps listening until user stops
+  recog.interimResults = true;   // live text while speaking
+  recog.maxAlternatives = 1;
+  return recog;
+}
+
+// 🧘‍♂️ Toggle mic on/off
+function toggleMic() {
+  const micBtn = document.getElementById("mic-btn");
+  const userInput = document.getElementById("userInput");
+
+  if (!recognition) recognition = initSpeechRecognition();
+  if (!recognition || !userInput) return;
+
+  if (!isListening) {
+    // Start listening
+    try {
+      recognition.start();
+      isListening = true;
+      micBtn.classList.add("listening");
+      micBtn.querySelector("img").style.filter = "invert(38%) sepia(74%) saturate(493%) hue-rotate(20deg) brightness(95%) contrast(91%)";
+      console.log("🎙️ Listening...");
+    } catch (err) {
+      console.error("Speech recognition error:", err);
+    }
+  } else {
+    // Stop listening
+    recognition.stop();
+    isListening = false;
+    micBtn.classList.remove("listening");
+    micBtn.querySelector("img").style.filter = "brightness(0)";
+    console.log("🛑 Mic stopped");
+  }
+
+  recognition.onresult = (event) => {
+    let transcript = "";
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      transcript += event.results[i][0].transcript;
+    }
+    userInput.value = transcript.trim();
+    autoResize(userInput);
+  };
+
+  recognition.onend = () => {
+    console.log("🎤 Recognition ended");
+    isListening = false;
+    micBtn.classList.remove("listening");
+    micBtn.querySelector("img").style.filter = "brightness(0)";
+  };
+
+  recognition.onerror = (event) => {
+    console.error("Speech recognition error:", event.error);
+    isListening = false;
+    micBtn.classList.remove("listening");
+    micBtn.querySelector("img").style.filter = "brightness(0)";
+  };
+}
+
+// ✅ Attach mic toggle to button
+document.addEventListener("DOMContentLoaded", () => {
+  const micBtn = document.getElementById("mic-btn");
+  if (micBtn) micBtn.addEventListener("click", toggleMic);
+});
+
+
 window.goToScreen = goToScreen;
 window.askGuru = askGuru;
