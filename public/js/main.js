@@ -1,5 +1,27 @@
 // main.js - TVAM frontend with iOS-safe Audio Unlock + Rime.ai TTS + Word Highlight
 
+const sessionId =
+  localStorage.getItem("tvam_sessionId") ||
+  (() => {
+    const id = "sess-" + Date.now() + "-" + Math.random().toString(36).slice(2, 8);
+    localStorage.setItem("tvam_sessionId", id);
+    return id;
+  })();
+
+function getLocalSessionKey() {
+  return `tvam_context_${sessionId}`;
+}
+
+function loadContext() {
+  try { return JSON.parse(localStorage.getItem(getLocalSessionKey())) || []; }
+  catch { return []; }
+}
+
+function saveContext(context) {
+  localStorage.setItem(getLocalSessionKey(), JSON.stringify(context));
+}
+
+
 // -----------------------------------------------------------
 // Persistent userId
 // -----------------------------------------------------------
@@ -329,21 +351,33 @@ async function askGuru() {
   const input = userInputEl.value.trim();
   if (!input) return;
 
+  // --- UI behavior (yours) ---
   responseEl.textContent = "🧘‍♂️ Listening..";
   responseEl.style.opacity = 1;
   if (welcomeEl) welcomeEl.textContent = "";
 
+  // --- Load and update local context ---
+  const history = loadContext();              // read stored messages
+  history.push({ role: "user", content: input });
+  saveContext(history);
+
   try {
+    // --- Send message + context to backend ---
     const resp = await fetch("/ask-guru", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: input }),
+      body: JSON.stringify({ message: input, sessionId, history }),
     });
 
     const data = await resp.json();
     const content = data?.choices?.[0]?.message?.content ?? null;
     if (!content) throw new Error("No response from the guru.");
 
+    // --- Store assistant’s reply back into context ---
+    history.push({ role: "assistant", content });
+    saveContext(history);
+
+    // --- Play voice + highlight as before ---
     await playWithHighlight(content, responseEl);
   } catch (err) {
     console.error(err);
@@ -351,9 +385,10 @@ async function askGuru() {
     responseEl.style.opacity = 1;
   } finally {
     userInputEl.value = "";
-    autoResize(userInputEl);
+    autoResize(userInputEl);   // keep your resizing behavior
   }
 }
+
 
 // -----------------------------------------------------------
 // 🎤 Voice Input (Speech-to-Text)
