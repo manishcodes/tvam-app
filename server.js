@@ -43,7 +43,7 @@ app.post("/ask-guru", async (req, res) => {
         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "gpt-5",
+        model: "gpt-4o-mini",
         messages: [systemMsg, ...contextMessages, {
           role: "user",
           content: `You are TVAM — The Inner Mirror, a conversational intelligence guiding people from mental noise to inner clarity — and from clarity to awareness.
