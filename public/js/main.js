@@ -359,6 +359,10 @@ async function askGuru() {
   // --- Load and update local context ---
   const history = loadContext();              // read stored messages
   history.push({ role: "user", content: input });
+
+  // 🧠 Keep only last 2 exchanges (4 total messages: 2 user + 2 assistant)
+  if (history.length > 4) history.splice(0, history.length - 4);
+
   saveContext(history);
 
   try {
@@ -375,6 +379,8 @@ async function askGuru() {
 
     // --- Store assistant’s reply back into context ---
     history.push({ role: "assistant", content });
+    if (history.length > 4) history.splice(0, history.length - 4);
+    
     saveContext(history);
 
     // --- Play voice + highlight as before ---
