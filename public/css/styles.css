@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500&display=swap');
+
 /* Global Reset */
 *,
 *::before,
@@ -10,8 +13,11 @@ body, html {
   margin: 0;
   overflow: hidden;
   font-family:'Roboto', sans-serif;
+  font-weight: 100;
   color: #000;
-  background-color: #eeeeee;
+  /* background-color: #eeeeee; */
+  background: #CDA24C;
+  background: linear-gradient(97deg,rgba(205, 162, 76, 1) 0%, rgba(243, 236, 222, 1) 100%);
 }
 
 /* --- Screen Styling --- */
@@ -128,8 +134,8 @@ button:hover,
 #welcome-chat-text{
   position: absolute;
   top: 35%;
-  font-weight: 500;
-  color: #d9a441;
+  font-weight: 100;
+  color: #000000;
 }
 
 @media (max-width: 480px)
@@ -165,9 +171,9 @@ button:hover,
 #responseWrapper::-webkit-scrollbar { display: none; }
 
 #responseText {
-  font-size: 1.9rem;
-  font-weight: 500;
-  color: #d9a441;
+  /* font-size: 1.9rem; */
+  font-weight: 200;
+  color: #000000;
   text-align: justify;
   line-height: 1.6;
   padding: 0 0.5rem;
@@ -287,7 +293,7 @@ textarea {
   bottom: 75px;
   width: 100%;
   padding: 12px 16px;
-  background: linear-gradient(to top, rgba(238,238,238,1) 90%, rgba(238,238,238,0) 100%);
+  /* background: linear-gradient(to top, rgba(238,238,238,1) 90%, rgba(238,238,238,0) 100%); */
   display: flex;
   justify-content: center;
   z-index: 10;
