@@ -1,6 +1,7 @@
 /* ---------------------- LOGIN PAGE ---------------------- */
 .login-body {
-  background-color: #f5f5f5;
+ background: #CDA24C;
+  background: linear-gradient(97deg,rgba(205, 162, 76, 1) 0%, rgba(243, 236, 222, 1) 100%);
   font-family: 'Roboto', sans-serif;
   display: flex;
   justify-content: center;
