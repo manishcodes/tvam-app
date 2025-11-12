@@ -26,27 +26,10 @@ app.post("/ask-guru", async (req, res) => {
     const { message, history } = req.body;
     if (!message) return res.status(400).json({ error: "Missing message" });
 
+    // 🧠 1. Your system prompt (TVAM personality)
     const systemMsg = {
       role: "system",
-      content: `You are TVAM — (keep your full system prompt here) ...`,
-    };
-
-    const contextMessages =
-      Array.isArray(history)
-        ? history.map((m) => ({ role: m.role, content: m.content }))
-        : [];
-
-    const result = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [systemMsg, ...contextMessages, {
-          role: "user",
-          content: `You are TVAM — The Inner Mirror, a conversational intelligence guiding people from mental noise to inner clarity — and from clarity to awareness.
+      content: `You are TVAM — The Inner Mirror, a conversational intelligence guiding people from mental noise to inner clarity — and from clarity to awareness.
  You are calm, compassionate, intelligent, and lucid.
  You are not a therapist or preacher; you are awareness speaking through conversation.
  You never fix; you help people see.
@@ -178,18 +161,81 @@ Closing (Insight Marker)
  “You came in restless and tangled in thought.
  Through reflection you began to see the loop instead of fighting it.
  Now that quiet clarity you feel — that’s awareness recognising itself.
- Carry it lightly through your day; it will walk beside you.”` 
-        }],
-        temperature: 0.8,
+ Carry it lightly through your day; it will walk beside you.”`,
+    };
+
+    // 🧘 2. Include chat history if available
+    const contextMessages = Array.isArray(history)
+      ? history.map((m) => ({ role: m.role, content: m.content }))
+      : [];
+
+    // 📨 3. Send request to GPT-5 Responses endpoint (no temperature!)
+    const result = await fetch("https://api.openai.com/v1/responses", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: "gpt-5",
+        input: [
+          systemMsg,
+          ...contextMessages,
+          { role: "user", content: message },
+        ],
       }),
     });
 
-    const data = await result.json();
-    res.json(data);
+    // 🪞 4. Read and normalize the GPT-5 response
+    const raw = await result.text();
+    console.log("🧠 OpenAI raw response:", raw); // helpful during debugging
+
+    let data;
+    try {
+      data = JSON.parse(raw);
+    } catch (e) {
+      console.error("Invalid JSON from OpenAI:", raw);
+      return res.status(500).json({ error: "Invalid JSON", raw });
+    }
+
+    // 🔍 Extract assistant message text
+    let content = null;
+
+    if (Array.isArray(data?.output)) {
+      for (const item of data.output) {
+        if (
+          item.type === "message" &&
+          item.role === "assistant" &&
+          item.content?.[0]?.text
+        ) {
+          content = item.content[0].text;
+          break;
+        }
+      }
+    }
+
+    // Fallbacks (GPT-4, old shape)
+    if (!content && data?.choices?.[0]?.message?.content)
+      content = data.choices[0].message.content;
+    if (!content && typeof data?.output_text === "string")
+      content = data.output_text;
+
+    if (!content) {
+      console.error("⚠️ No content found in OpenAI response:", data);
+      return res.status(502).json({ error: "No content from OpenAI", raw: data });
+    }
+
+    // ✅ 5. Return legacy-compatible shape to frontend
+    res.json({
+      choices: [{ message: { role: "assistant", content } }],
+    });
   } catch (err) {
+    console.error("ask-guru error:", err);
     res.status(500).json({ error: err.message });
   }
 });
+
+
 
 
 // -------------------- WebSocket Bridge for Rime.ai --------------------
