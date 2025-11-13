@@ -221,18 +221,18 @@ textarea {
   bottom: 0;
   left: 0;
   width: 100%;
-  background: #f8f9fa;
-  border-top: 1px solid #ddd;
+  /* background: #f8f9fa; */
+  /* border-top: 1px solid #ddd; */
   padding: 8px 20px;
   font-size: 0.85rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #444;
+  /* color: #444; */
   z-index: 100;
 
   /* ✨ Add soft top shadow */
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1); */
 }
 
 .footer-links {
@@ -361,6 +361,7 @@ textarea {
   margin: auto;
   text-align: center;
   position: relative;
+  
 }
 .welcome-logo-main 
 { 
@@ -690,3 +691,97 @@ textarea {
   70% { box-shadow: 0 0 0 8px rgba(217, 163, 65, 0); }
   100% { box-shadow: 0 0 0 0 rgba(217, 163, 65, 0); }
 }
+
+/* HEADER: Transparent and flexible */
+.main-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background: transparent; /* no background */
+  border: none; /* remove any line or shadow */
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* Equal spacing for left, center, right */
+.header-left,
+.header-center,
+.header-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+/* Align left logo */
+.header-left {
+  justify-content: flex-start;
+}
+
+/* Center TVAM logo */
+.header-center {
+  justify-content: center;
+}
+
+/* Align right feedback button */
+.header-right {
+  justify-content: flex-end;
+}
+
+/* Logo styling */
+.brand-logo {
+  height: 40px;
+  object-fit: contain;
+}
+
+.tvam-logo {
+  height: 20px;
+  object-fit: contain;
+}
+
+/* Feedback button */
+.feedback-btn-header {
+  background: linear-gradient(97deg,rgba(205, 162, 76, 1) 0%, rgba(243, 236, 222, 1) 100%);
+  color: #000000;
+  
+
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  
+  
+  border: 2px;
+  border-style: solid;
+  
+  padding: 8px;
+  
+  transition: background 0.2s ease;
+  border-color: #d9a341;
+}
+
+.feedback-btn-header:hover {
+  background-color: rgba(0, 0, 0, 0.65);
+}
+
+/* MOBILE view — keep elements horizontal */
+@media (max-width: 600px) {
+  .main-header {
+    padding: 10px 16px;
+  }
+
+  .brand-logo {
+    height: 32px;
+  }
+
+  .tvam-logo {
+    height: 15px;
+  }
+
+  .feedback-btn-header {
+    font-size: 12px;
+    padding: 6px 14px;
+  }
+}
+
