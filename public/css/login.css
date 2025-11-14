@@ -381,7 +381,7 @@
 .cancel-btn {
   box-sizing: border-box;
   width: 100%;
-  display: inline-block;
+  /* display: inline-block; */
   margin: 0;           /* remove stray margins that cause offsets */
   padding-left: 12px;  /* match input left padding for visual alignment */
   padding-right: 12px; /* ensure visual balance */
@@ -442,8 +442,8 @@ footer p {
 .company-logo {
   position: absolute;
   left: 20px;
-  width: 55px;
-  height: auto;
+  /* width: 55px; */
+  height: 40px;
 }
 
 .center-logo-block {
