@@ -121,6 +121,31 @@ function attachAudioUnlockHandlers() {
 }
 attachAudioUnlockHandlers();
 
+function setPetalMode(mode) {
+  const petals = [
+    document.getElementById("petal-back"),
+    document.getElementById("petal-middle"),
+    document.getElementById("petal-front"),
+  ];
+
+  petals.forEach(p => {
+    p.classList.remove("rotate-cw", "rotate-ccw", "rotate-cw-fast", "breathe");
+
+
+    if (mode === "rotate") {
+      if (p.id === "petal-back") p.classList.add("rotate-cw");
+      if (p.id === "petal-middle") p.classList.add("rotate-ccw");
+      if (p.id === "petal-front") p.classList.add("rotate-cw-fast");
+    }
+
+    if (mode === "breathing") {
+  petals.forEach(p => p.classList.add("breathe"));
+}
+
+  });
+}
+
+
 // -----------------------------------------------------------
 // Navigation
 // -----------------------------------------------------------
@@ -129,20 +154,15 @@ function goToScreen(n) {
   const el = document.getElementById("screen" + n);
   if (el) el.classList.add("active");
 
+  if (n === 1 || n === 2 || n === 4) {
+    setPetalMode("rotate");
+  }
+
   if (n === 3) {
     startCountdown();
-    startBreathingAnimation(); // ✅ add this line only
-  }
-
-  if (n === 4) {
-    setTimeout(() => {
-      const i = document.getElementById("userInput");
-      if (i) i.focus();
-    }, 200);
+    setPetalMode("breathing");
   }
 }
-
-
 // -----------------------------------------------------------
 // Setup buttons and listeners
 // -----------------------------------------------------------

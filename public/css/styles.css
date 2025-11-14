@@ -347,7 +347,7 @@ textarea {
 
 /* ---------- SCREEN 1: Welcome Panel ---------- */
 .welcome-panel {
-  background: #fff;
+  /* background: #fff; */
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   display: flex;
@@ -387,7 +387,7 @@ textarea {
 
 /* ---------- SCREEN 2: Prelude Panel ---------- */
 #screen2 .welcome-panel {
-  background: #fff;
+  /* background: #fff; */
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   display: flex;
@@ -508,7 +508,7 @@ textarea {
 
 /* ---------- SCREEN 3: Breathing Panel (aligned perfectly with Screen 2) ---------- */
 #screen3 .welcome-panel {
-  background: #fff;
+  /* background: #fff; */
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   display: flex;
@@ -784,4 +784,56 @@ textarea {
     padding: 6px 14px;
   }
 }
+
+/* ---------------- PETAL BACKGROUND ---------------- */
+
+#petal-back, #petal-middle, #petal-front {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform-origin: center;
+  z-index: 0;  /* behind all content */
+  pointer-events: none;
+}
+
+.petal {
+  width: 100%;
+  height: 100%;
+  mask: url('../assets/petal.svg') center/contain no-repeat;
+  -webkit-mask: url('../assets/petal.svg') center/contain no-repeat;
+  background-color: #ffffff29;
+}
+
+/* Sizes */
+.size-back { width: 240px; height: 240px; }
+.size-middle { width: 180px; height: 180px; }
+.size-front { width: 120px; height: 120px; }
+
+/* Rotation */
+.rotate-cw { animation: rotateCW 50s linear infinite; }
+.rotate-ccw { animation: rotateCCW 40s linear infinite; }
+.rotate-cw-fast { animation: rotateCW 25s linear infinite; }
+
+@keyframes rotateCW {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes rotateCCW {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(-360deg); }
+}
+
+/* Breathing mode applied to wrapper, not the petal */
+.petal-wrapper.breathe {
+  animation: breatheScale 12s ease-in-out infinite;
+}
+
+@keyframes breatheScale {
+  0%   { transform: translate(-50%, -50%) scale(1); }
+  40%  { transform: translate(-50%, -50%) scale(1.12); }
+  60%  { transform: translate(-50%, -50%) scale(1.12); }
+  100% { transform: translate(-50%, -50%) scale(1); }
+}
+
 
