@@ -13,7 +13,8 @@ body, html {
   margin: 0;
   overflow: hidden;
   font-family:'Roboto', sans-serif;
-  font-weight: 100;
+  /* letter-spacing: 1.6px; */
+  font-weight: 300;
   color: #000;
   /* background-color: #eeeeee; */
   background: #CDA24C;
@@ -73,10 +74,19 @@ button:hover,
 }
 
 #prelude-btn {
-  width: 140px;
-  height: 140px;
-  position: absolute;
-  top: 35%;
+   position: absolute; bottom: 35px;
+  height: 48px; min-width: 160px; padding: 0 20px;
+  background-color: #000000;
+  border: 2px solid #f8f8f7; color: #f8f8f7; border-radius: 16px;
+  cursor: pointer; box-shadow: none;
+  /* transition: background-color 0.18s ease, transform 0.12s ease; */
+}
+
+#prelude-btn:hover { 
+  background-color: #d9a341; 
+  color: #000;
+  border-color: #000;
+  /* transform: scale(1.02);  */
 }
 
 .skip-btn {
@@ -241,7 +251,7 @@ textarea {
 }
 
 .footer-links a {
-  color: #007bff;
+  color: #000000;
   text-decoration: none;
 }
 
@@ -349,7 +359,7 @@ textarea {
 .welcome-panel {
   /* background: #fff; */
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  /* box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -369,27 +379,39 @@ textarea {
   margin-bottom: 10px; 
 }
 .welcome-subtitle {
-  color: #000000; font-size: 17px; font-weight: 500;
+  color: #000000; 
+  font-size: 24px; 
+  font-weight: 500;
   margin: 8px 0 4px 0;
 }
 .welcome-tagline {
-  color: #000000; font-size: 14px; font-style: italic; margin: 0 0 20px 0;
+  color: #000000;
+  font-size: 17px; 
+  font-style: normal; 
+  margin: 0 0 20px 0;
+  line-height: 2;
+  /* letter-spacing: 2px; */
 }
 .welcome-panel .begin-btn {
   position: absolute; bottom: 10px;
   height: 48px; min-width: 160px; padding: 0 20px;
-  background-color: #eeeeee;
-  border: 2px solid #d9a341; color: #000; border-radius: 12px;
+  background-color: #000000;
+  border: 2px solid #f8f8f7; color: #f8f8f7; border-radius: 16px;
   cursor: pointer; box-shadow: none;
   transition: background-color 0.18s ease, transform 0.12s ease;
 }
-.welcome-panel .begin-btn:hover { background-color: #f5e4c0; transform: scale(1.02); }
+.welcome-panel .begin-btn:hover { 
+  background-color: #d9a341; 
+  color: #000;
+  border-color: #000;
+  /* transform: scale(1.02);  */
+}
 
 /* ---------- SCREEN 2: Prelude Panel ---------- */
 #screen2 .welcome-panel {
   /* background: #fff; */
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  /* box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -411,17 +433,18 @@ textarea {
 }
 
 #screen2 .welcome-subtitle {
-  color: #d9a341;
-  font-size: 17px;
+   color: #000000; 
+  font-size: 24px; 
   font-weight: 500;
   margin: 8px 0 4px 0;
 }
 
 #screen2 .welcome-tagline {
-  color: #9a9a9a;
-  font-size: 14px;
-  font-style: italic;
+  color: #000000;
+  font-size: 17px; 
+  font-style: normal; 
   margin: 0 0 20px 0;
+  line-height: 2;
 }
 
 /* Center the circle button nicely */
@@ -449,11 +472,11 @@ textarea {
 /* Skip button same as Begin */
 #screen2 .skip-btn {
   position: absolute;
-  bottom: 10px;
-  background-color: #eeeeee;
-  border: 2px solid #d9a341;
-  color: #000;
-  border-radius: 12px;
+  bottom: -20px;
+  background-color: #eeeeee00;
+  border: 2px solid #f8f8f7;
+  color: #f8f8f7;
+  border-radius: 16px;
   padding: 0.8rem 2rem;
   font-size: 15px;
   cursor: pointer;
@@ -462,8 +485,10 @@ textarea {
 }
 
 #screen2 .skip-btn:hover {
-  background-color: #f5e4c0;
-  transform: scale(1.02);
+  background-color: #d9a341;
+  border: 2px solid #000000;
+  color: #000;
+  /* transform: scale(1.02); */
 }
 
 /* Responsive tweaks */
@@ -510,7 +535,7 @@ textarea {
 #screen3 .welcome-panel {
   /* background: #fff; */
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  /* box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -532,17 +557,18 @@ textarea {
 }
 
 #screen3 .welcome-subtitle {
-  color: #d9a341;
-  font-size: 17px;
+  color: #000000; 
+  font-size: 24px; 
   font-weight: 500;
   margin: 8px 0 4px 0;
 }
 
 #screen3 .welcome-tagline {
-  color: #9a9a9a;
-  font-size: 14px;
-  font-style: italic;
-  margin: 0 0 40px 0;
+ color: #000000;
+  font-size: 17px; 
+  font-style: normal; 
+  margin: 0 0 20px 0;
+  line-height: 2;
 }
 
 /* Breathing circle placed exactly where Prelude button was (same top offset and size) */
@@ -550,7 +576,7 @@ textarea {
   width: 140px;
   height: 140px;
   border-radius: 50%;
-  background: #d9a341;
+  background: #d9a44100;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -567,7 +593,7 @@ textarea {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: rgba(230, 159, 53, 0.3);
+  background: rgba(230, 159, 53, 0);
   animation: pulse 12s ease-in-out infinite;
 }
 
@@ -585,7 +611,7 @@ textarea {
   left: 50%;
   transform: translateX(-50%);
   font-size: clamp(2.2rem, 4.5vw, 3.8rem);
-  color: #000000;
+  color: #d9a341;
   font-weight: 300;
   text-align: center;
 }
@@ -593,20 +619,23 @@ textarea {
 /* Skip button aligned like Begin button */
 #screen3 .skip-btn {
   position: absolute;
-  bottom: 10px;
-  background-color: #eeeeee;
-  border: 2px solid #d9a341;
-  color: #000;
-  border-radius: 12px;
+  bottom: -20px;
+  background-color: #eeeeee00;
+  border: 2px solid #f8f8f7;
+  color: #f8f8f7;
+  border-radius: 16px;
   padding: 0.8rem 2rem;
   font-size: 15px;
   cursor: pointer;
   box-shadow: none;
   transition: background-color 0.2s ease, transform 0.12s ease;
 }
+
 #screen3 .skip-btn:hover {
-  background-color: #f5e4c0;
-  transform: scale(1.02);
+  background-color: #d9a341;
+  border: 2px solid #000000;
+  color: #000;
+  /* transform: scale(1.02); */
 }
 
 /* ---------- Responsive adjustments ---------- */
@@ -755,8 +784,8 @@ textarea {
   border: 2px;
   border-style: solid;
   
-  padding: 8px;
-  
+  padding: 8px 28px 8px 28px;
+  font-size: 300;
   transition: background 0.2s ease;
   border-color: #d9a341;
 }
@@ -835,5 +864,3 @@ textarea {
   60%  { transform: translate(-50%, -50%) scale(1.12); }
   100% { transform: translate(-50%, -50%) scale(1); }
 }
-
-
