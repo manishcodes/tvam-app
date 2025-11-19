@@ -489,6 +489,23 @@ function toggleMic() {
   };
 }
 
+let isVoiceOn = false;
+
+  function toggleVoice() {
+    const icon = document.getElementById("voiceIcon");
+
+    isVoiceOn = !isVoiceOn;
+
+    if (isVoiceOn) {
+      icon.src = "voice-on.png";   // 🔊 voice ON icon
+      icon.alt = "Voice on";
+    } else {
+      icon.src = "voice-off.png";  // 🔇 voice OFF icon
+      icon.alt = "Voice off";
+    }
+  }
+
+
 // ✅ Attach mic toggle to button
 document.addEventListener("DOMContentLoaded", () => {
   const micBtn = document.getElementById("mic-btn");

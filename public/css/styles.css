@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500&display=swap');
+
 
 /* Global Reset */
 *,
@@ -19,6 +21,11 @@ body, html {
   /* background-color: #eeeeee; */
   background: #CDA24C;
   background: linear-gradient(97deg,rgba(205, 162, 76, 1) 0%, rgba(243, 236, 222, 1) 100%);
+}
+
+h2,button {
+  font-family: 'Lexend', sans-serif;
+  font-weight: 400; /* Regular */
 }
 
 /* --- Screen Styling --- */
@@ -77,7 +84,7 @@ button:hover,
    position: absolute; bottom: 35px;
   height: 48px; min-width: 160px; padding: 0 20px;
   background-color: #000000;
-  border: 2px solid #f8f8f7; color: #f8f8f7; border-radius: 16px;
+  border: 2px solid #f8f8f7; color: #f8f8f7; border-radius: 32px;
   cursor: pointer; box-shadow: none;
   /* transition: background-color 0.18s ease, transform 0.12s ease; */
 }
@@ -91,7 +98,7 @@ button:hover,
 
 .skip-btn {
   background-color: #eeeeee;
-  border-radius: 12px;
+  border-radius: 32px;
   border-style: solid;
   border-color: #d9a341;
   position: absolute;
@@ -144,7 +151,7 @@ button:hover,
 #welcome-chat-text{
   position: absolute;
   top: 35%;
-  font-weight: 100;
+  font-weight: 300;
   color: #000000;
 }
 
@@ -396,7 +403,7 @@ textarea {
   position: absolute; bottom: 10px;
   height: 48px; min-width: 160px; padding: 0 20px;
   background-color: #000000;
-  border: 2px solid #f8f8f7; color: #f8f8f7; border-radius: 16px;
+  border: 2px solid #f8f8f7; color: #f8f8f7; border-radius: 32px;
   cursor: pointer; box-shadow: none;
   transition: background-color 0.18s ease, transform 0.12s ease;
 }
@@ -476,12 +483,13 @@ textarea {
   background-color: #eeeeee00;
   border: 2px solid #f8f8f7;
   color: #f8f8f7;
-  border-radius: 16px;
+  border-radius: 32px;
   padding: 0.8rem 2rem;
   font-size: 15px;
   cursor: pointer;
   box-shadow: none;
   transition: background-color 0.2s ease, transform 0.12s ease;
+  height: 48px;
 }
 
 #screen2 .skip-btn:hover {
@@ -564,7 +572,7 @@ textarea {
 }
 
 #screen3 .welcome-tagline {
- color: #000000;
+  color: #000000;
   font-size: 17px; 
   font-style: normal; 
   margin: 0 0 20px 0;
@@ -685,6 +693,20 @@ textarea {
   }
 }
 
+#screen4 .welcome-tagline{
+   color: #000000;
+  font-size: 17px; 
+  font-style: normal; 
+  margin: 0 0 20px 0;
+  line-height: 2;
+}
+
+/* #screen4 .voice-mute{
+  width: 48px;
+  border-radius: 50%;
+  background-color: #000;
+} */
+
 .feedback-btn {
   position: absolute;
   top: 10px;
@@ -760,38 +782,39 @@ textarea {
 
 /* Logo styling */
 .brand-logo {
-  height: 40px;
+  height: 60px;
   object-fit: contain;
 }
 
 .tvam-logo {
-  height: 20px;
+  /* height: 20px; */
+  width: 165px;
+  height: auto;
   object-fit: contain;
 }
 
 /* Feedback button */
 .feedback-btn-header {
-  background: linear-gradient(97deg,rgba(205, 162, 76, 1) 0%, rgba(243, 236, 222, 1) 100%);
-  color: #000000;
-  
-
-  border-radius: 20px;
+  /* background: linear-gradient(97deg,rgba(205, 162, 76, 1) 0%, rgba(243, 236, 222, 1) 100%); */
+  background: #000;
+  border-color: #f8f8f7;
+  color: #f8f8f7;
+  border-radius: 32px;
   cursor: pointer;
-  font-family: 'Roboto', sans-serif;
-  font-size: 14px;
-  
-  
+  font-family: 'Lexend', sans-serif;
+  font-weight: 400; /* Regular */
   border: 2px;
   border-style: solid;
-  
   padding: 8px 28px 8px 28px;
   font-size: 300;
   transition: background 0.2s ease;
-  border-color: #d9a341;
+  height: 48px;
 }
 
 .feedback-btn-header:hover {
-  background-color: rgba(0, 0, 0, 0.65);
+  background-color: #d9a341; 
+  color: #000;
+  border-color: #000;
 }
 
 /* MOBILE view — keep elements horizontal */
@@ -834,12 +857,12 @@ textarea {
 }
 
 /* Sizes */
-.size-back { width: 240px; height: 240px; }
-.size-middle { width: 180px; height: 180px; }
-.size-front { width: 120px; height: 120px; }
+.size-back { width: 500px; height: 500px; }
+.size-middle { width: 350px; height: 350px; }
+.size-front { width: 200px; height: 200px; }
 
 /* Rotation */
-.rotate-cw { animation: rotateCW 50s linear infinite; }
+.rotate-cw { animation: rotateCW 25s linear infinite; }
 .rotate-ccw { animation: rotateCCW 40s linear infinite; }
 .rotate-cw-fast { animation: rotateCW 25s linear infinite; }
 
@@ -855,7 +878,7 @@ textarea {
 
 /* Breathing mode applied to wrapper, not the petal */
 .petal-wrapper.breathe {
-  animation: breatheScale 12s ease-in-out infinite;
+  animation: breatheScale 8s ease-in-out infinite;
 }
 
 @keyframes breatheScale {
@@ -864,3 +887,61 @@ textarea {
   60%  { transform: translate(-50%, -50%) scale(1.12); }
   100% { transform: translate(-50%, -50%) scale(1); }
 }
+
+.voice-mute {
+  position: fixed;
+  top: 75px;
+  right: 20px;
+
+  width: 50px;
+  height: 50px;
+
+  background: #f8f8f7;
+  border: 2px solid #000;
+  border-radius: 50%;
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 0;
+  z-index: 9999; /* stays above all elements */
+}
+
+.voice-mute img.icon {
+  width: 24px;
+  height: 24px;
+}
+
+.hidden { display: none; }
+.visible { display: block; }
+
+.go-back {
+  position: fixed;
+  top: 75px;
+  left: 20px;
+
+  width: 50px;
+  height: 50px;
+
+  background: #f8f8f7;
+  border: 2px solid #000;
+  border-radius: 50%;
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 0;
+  z-index: 9999; /* stays above all elements */
+}
+
+.go-back img {
+  width: 24px;
+  height: 24px;
+}
+
+
+

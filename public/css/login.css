@@ -1,13 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500&display=swap');
+
 /* ---------------------- LOGIN PAGE ---------------------- */
 .login-body {
  background: #CDA24C;
   background: linear-gradient(97deg,rgba(205, 162, 76, 1) 0%, rgba(243, 236, 222, 1) 100%);
   font-family: 'Roboto', sans-serif;
+  font-weight: 300;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   margin: 0;
+}
+
+h2,h3 {
+  font-family: 'Lexend', sans-serif;
+  font-weight: 400; /* Regular */
 }
 
 .login-container {
@@ -43,7 +52,8 @@
 }
 
 .login-header h2 {
-  font-weight: 500;
+   font-family: 'Lexend', sans-serif;
+  font-weight: 400; /* Regular */
   margin: 0;
   color: #202124;
 }
@@ -443,7 +453,7 @@ footer p {
   position: absolute;
   left: 20px;
   /* width: 55px; */
-  height: 40px;
+  height: 60px;
 }
 
 .center-logo-block {

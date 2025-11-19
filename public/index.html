@@ -39,17 +39,17 @@
 
 <body>
   <!-- GLOBAL PETAL BACKGROUND -->
-<div id="petal-back" class="petal-wrapper size-back rotate-cw">
-  <div class="petal"></div>
-</div>
+  <div id="petal-back" class="petal-wrapper size-back rotate-cw">
+    <div class="petal"></div>
+  </div>
 
-<div id="petal-middle" class="petal-wrapper size-middle rotate-ccw">
-  <div class="petal"></div>
-</div>
+  <div id="petal-middle" class="petal-wrapper size-middle rotate-ccw">
+    <div class="petal"></div>
+  </div>
 
-<div id="petal-front" class="petal-wrapper size-front rotate-cw-fast">
-  <div class="petal"></div>
-</div>
+  <div id="petal-front" class="petal-wrapper size-front rotate-cw-fast">
+    <div class="petal"></div>
+  </div>
 
   <!-- HEADER -->
   <header class="main-header">
@@ -72,17 +72,19 @@
   <div class="screen active" id="screen1">
     <div class="welcome-panel">
       <!-- <img src="assets/TVAM.png" alt="TVAM Logo" class="welcome-logo-main" /> -->
-      <p class="welcome-subtitle">Welcome to TVAM</p>
+      <!-- <p class="welcome-subtitle">Welcome to TVAM</p> -->
+      <h2>Welcome to TVAM</h2>
       <p class="welcome-tagline">Thank you for lending us your time!<br>
 
-You’re about to try an early reflection experience from Begin Inwards — a gentle conversation<br> that helps you slow down, listen within, and see things more clearly.<br>
-Nothing you say is stored or analysed.<br>
-This short test helps us understand whether awareness itself can bring calm and clarity</p>
+        You’re about to try an early reflection experience from Begin Inwards — a gentle conversation<br> that helps you
+        slow down, listen within, and see things more clearly.<br>
+        Nothing you say is stored or analysed.<br>
+        This short test helps us understand whether awareness itself can bring calm and clarity</p>
       <button class="begin-btn">Begin</button>
     </div>
     <!-- <button onclick="openFeedback()" class="feedback-btn" title="Feedback"> -->
-      <!-- <img src="assets/feedback.png" alt="Feedback" /> -->
-       <!-- Share Feedback -->
+    <!-- <img src="assets/feedback.png" alt="Feedback" /> -->
+    <!-- Share Feedback -->
     <!-- </button> -->
 
   </div>
@@ -91,14 +93,16 @@ This short test helps us understand whether awareness itself can bring calm and 
   <div class="screen" id="screen2">
     <div class="welcome-panel">
       <!-- <img src="assets/TVAM.png" alt="TVAM Logo" class="welcome-logo-main" /> -->
-      <p class="welcome-subtitle">A minute of pause</p>
-      <p class="welcome-tagline">Take this minute to breathe.<br>As you breathe turn your gaze inwards, observe what's happing within.<br>Do not rush to judge, Do not rush to fix, Just Observe...</p>
+      <!-- <p class="welcome-subtitle">A minute of pause</p> -->
+      <h2>A minute of pause</h2>
+      <p class="welcome-tagline">Take this minute to breathe.<br>As you breathe turn your gaze inwards, observe what's
+        happing within.<br>Do not rush to judge, Do not rush to fix, Just Observe...</p>
       <button id="prelude-btn">Breathe</button>
       <button class="skip-btn">Skip &gt;</button>
     </div>
     <!-- <button onclick="openFeedback()" class="feedback-btn" title="Feedback"> -->
-      <!-- <img src="assets/feedback.png" alt="Feedback" /> -->
-       <!-- Share Feedback -->
+    <!-- <img src="assets/feedback.png" alt="Feedback" /> -->
+    <!-- Share Feedback -->
     <!-- </button> -->
   </div>
 
@@ -112,12 +116,12 @@ This short test helps us understand whether awareness itself can bring calm and 
         <div class="countdown" id="countdown">60</div>
         <!-- <span id="breathingText">Breathe In</span> -->
       </div>
-      
+
       <button class="skip-btn">Skip &gt;</button>
     </div>
     <!-- <button onclick="openFeedback()" class="feedback-btn" title="Feedback"> -->
-      <!-- <img src="assets/feedback.png" alt="Feedback" /> -->
-       <!-- Share Feedback -->
+    <!-- <img src="assets/feedback.png" alt="Feedback" /> -->
+    <!-- Share Feedback -->
     <!-- </button> -->
   </div>
 
@@ -126,10 +130,11 @@ This short test helps us understand whether awareness itself can bring calm and 
     <!-- <img src="assets/TVAM.png" alt="TVAM Logo" style="height: 20px; top: 10px;" /> -->
     <!-- <div class="breathing-circle-chat"></div> -->
     <div id="welcome-chat-text">
-     “Welcome to TVAM — a short reflection to help you slow down for a few minutes.<br>
-This isn’t advice or therapy;<br> it’s a guided pause where you can speak freely and notice what’s happening inside.<br>
-You’ll share what’s been loud in your mind,<br> take a small Step-In moment of quiet, and finish with one clear insight you can carry through the day.<br>
-It takes about five minutes — ready to begin?”
+      <h2>Welcome to TVAM</h2>
+      <p class="welcome-tagline">A space to slow down and see within.<br>
+        Share whatever feels present — there’s no right or wrong.<br>
+        TVAM listens, not judges.<br>
+        Begin whenever you’re ready.</p>
     </div>
 
     <!-- Guru Response Area -->
@@ -154,25 +159,34 @@ It takes about five minutes — ready to begin?”
       </div>
     </div>
 
-    <!-- <button onclick="openFeedback()" class="feedback-btn" title="Feedback"> -->
-      <!-- <img src="assets/feedback.png" alt="Feedback" /> -->
-       <!-- Share Feedback -->
-    <!-- </button> -->
+    <button onclick="toggleVoice()" class="voice-mute" id="voiceBtn" title="Toggle voice">
+      <img src="assets/voice-off.png" id="voiceOffIcon" class="icon visible">
+      <img src="assets/voice-on.png" id="voiceOnIcon" class="icon hidden">
+    </button>
+
+    <button onclick="goBack()" class="go-back" id="goBackBtn" title="Go back">
+      <img src="assets/goBack.png" id="go-back-btn" >
+    </button>
+
+    <!-- <button onclick="goBack()" class="go-back-btn" id="goBackBtn" title="Back btn">
+      <img src="assets/voice-off.png" id="goBack">
+    </button> -->
+
   </div>
 
   <footer class="footer">
-  <p class="copyright">
-    &copy; 2025 <strong>Begin Inwards, Inc.</strong> All rights reserved.
-  </p>
+    <p class="copyright">
+      &copy; 2025 <strong>Begin Inwards, Inc.</strong> All rights reserved.
+    </p>
 
-  <nav class="footer-links" aria-label="Footer navigation">
-    <a href="terms.html" target="_blank" rel="noopener noreferrer">Terms & Conditions</a>
-    <span aria-hidden="true">|</span>
-    <a href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
-    <span aria-hidden="true">|</span>
-    <a href="#" onclick="logout()">Logout</a>
-  </nav>
-</footer>
+    <nav class="footer-links" aria-label="Footer navigation">
+      <a href="terms.html" target="_blank" rel="noopener noreferrer">Terms & Conditions</a>
+      <span aria-hidden="true">|</span>
+      <a href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+      <span aria-hidden="true">|</span>
+      <a href="#" onclick="logout()">Logout</a>
+    </nav>
+  </footer>
 
 
 
