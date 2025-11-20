@@ -707,6 +707,87 @@ textarea {
   background-color: #000;
 } */
 
+/* ---------- CHAT LAYOUT (Screen 4) ---------- */
+
+#screen4 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Main scrollable chat region */
+.chat-container {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 80px 16px 140px; /* top: below header; bottom: above input/footer */
+  box-sizing: border-box;
+}
+
+.messages-list {
+  width: 100%;
+  max-width: 800px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+/* Each message row */
+.message-row {
+  display: flex;
+  margin-bottom: 16px;
+}
+
+/* User vs guru alignment */
+.message-row.user {
+  justify-content: flex-end;
+}
+
+.message-row.assistant {
+  justify-content: flex-start;
+}
+
+/* Bubble styling */
+.message-bubble {
+  font-size: 15px;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+/* User bubble – cream rounded pill, like the design */
+.message-bubble.user {
+  max-width: 80%;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 24px;
+  padding: 14px 18px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+
+/* Guru text – simple, left-aligned, no bubble */
+.message-bubble.assistant {
+  max-width: 90%;
+  color: #000;
+  padding: 0;
+}
+
+/* Small tweak for mobile */
+@media (max-width: 600px) {
+  .chat-container {
+    padding-top: 70px;
+    padding-bottom: 130px;
+  }
+
+  .message-bubble.user {
+    max-width: 90%;
+  }
+
+  .message-bubble.assistant {
+    max-width: 95%;
+  }
+}
+
+
 .feedback-btn {
   position: absolute;
   top: 10px;
@@ -887,6 +968,28 @@ textarea {
   60%  { transform: translate(-50%, -50%) scale(1.12); }
   100% { transform: translate(-50%, -50%) scale(1); }
 }
+
+#petal-back,
+#petal-middle,
+#petal-front,
+#petal-back *,
+#petal-middle *,
+#petal-front * {
+  pointer-events: none !important;
+}
+
+#screen1 {
+  z-index: 10 !important;
+}
+
+#screen2 {
+  z-index: 11 !important;
+}
+
+#screen3 {
+  z-index: 12 !important;
+}
+
 
 .voice-mute {
   position: fixed;

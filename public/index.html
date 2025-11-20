@@ -127,23 +127,10 @@
 
   <!-- SCREEN 4: Spiritual Guru Chat -->
   <div class="screen" id="screen4">
-    <!-- <img src="assets/TVAM.png" alt="TVAM Logo" style="height: 20px; top: 10px;" /> -->
-    <!-- <div class="breathing-circle-chat"></div> -->
-    <div id="welcome-chat-text">
-      <h2>Welcome to TVAM</h2>
-      <p class="welcome-tagline">A space to slow down and see within.<br>
-        Share whatever feels present — there’s no right or wrong.<br>
-        TVAM listens, not judges.<br>
-        Begin whenever you’re ready.</p>
-    </div>
 
-    <!-- Guru Response Area -->
-    <div class="guru-response-zone">
-      <div id="responseWrapper" class="guru-response-wrapper">
-        <div class="fade-mask top-fade"></div>
-        <div id="responseText" class="guru-response-text"></div>
-        <div class="fade-mask bottom-fade"></div>
-      </div>
+    <!-- Chat area -->
+    <div class="chat-container">
+      <div id="messages" class="messages-list"></div>
     </div>
 
     <!-- Chat Input -->
@@ -159,20 +146,19 @@
       </div>
     </div>
 
+    <!-- Voice toggle -->
     <button onclick="toggleVoice()" class="voice-mute" id="voiceBtn" title="Toggle voice">
       <img src="assets/voice-off.png" id="voiceOffIcon" class="icon visible">
       <img src="assets/voice-on.png" id="voiceOnIcon" class="icon hidden">
     </button>
 
+    <!-- Back button -->
     <button onclick="goBack()" class="go-back" id="goBackBtn" title="Go back">
-      <img src="assets/goBack.png" id="go-back-btn" >
+      <img src="assets/goBack.png" id="go-back-btn">
     </button>
 
-    <!-- <button onclick="goBack()" class="go-back-btn" id="goBackBtn" title="Back btn">
-      <img src="assets/voice-off.png" id="goBack">
-    </button> -->
-
   </div>
+
 
   <footer class="footer">
     <p class="copyright">

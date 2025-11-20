@@ -75,7 +75,7 @@ async function unlockAudio() {
   try {
     const a = new Audio();
     a.muted = true;
-    await a.play().catch(() => {});
+    await a.play().catch(() => { });
     audioUnlocked = true;
     console.log("🔓 Audio unlocked via HTMLAudio fallback");
     return true;
@@ -139,8 +139,8 @@ function setPetalMode(mode) {
     }
 
     if (mode === "breathing") {
-  petals.forEach(p => p.classList.add("breathe"));
-}
+      petals.forEach(p => p.classList.add("breathe"));
+    }
 
   });
 }
@@ -162,11 +162,36 @@ function goToScreen(n) {
     startCountdown();
     setPetalMode("breathing");
   }
+
+  if (n === 4) {
+    renderMessages();
+  }
 }
 // -----------------------------------------------------------
 // Setup buttons and listeners
 // -----------------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
+
+  // Seed welcome message as first guru message
+  let history = loadContext();
+  if (!history || history.length === 0) {
+    history = [
+      {
+        role: "assistant",
+        content:
+          "Welcome to TVAM.\n" +
+          "A space to slow down and see within.\n" +
+          "Share whatever feels present — there’s no right or wrong.\n" +
+          "TVAM listens, not judges.\n" +
+          "Begin whenever you’re ready."
+      }
+    ];
+    saveContext(history);
+  }
+
+  // Initial render of chat when page loads
+  renderMessages();
+
   const beginBtn = document.querySelector(".begin-btn");
   if (beginBtn) {
     beginBtn.addEventListener("click", async () => {
@@ -195,7 +220,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("load", () => autoResize(userInput));
   }
 
-    // Mic and Send button listeners
+  // Mic and Send button listeners
   const micBtn = document.getElementById("mic-btn");
   const sendBtn = document.getElementById("send-btn");
 
@@ -266,15 +291,12 @@ function autoResize(el) {
 }
 
 // -----------------------------------------------------------
-// Play Audio + Highlight Words
+// Play Audio (no word highlight)
 // -----------------------------------------------------------
-async function playWithHighlight(text, responseEl) {
-  const words = String(text).split(/\s+/).filter(Boolean);
-  responseEl.innerHTML = words.map((w) => `<span>${escapeHtml(w)}</span>`).join(" ");
-  responseEl.style.opacity = 1;
-
-  const wrapper = document.getElementById("responseWrapper");
-  if (wrapper) wrapper.scrollTop = 0;
+async function playWithHighlight(text) {
+  // Only play if voice is ON
+  if (!isVoiceOn) return;
+  if (!text) return;
 
   if (!audioUnlocked) {
     const ok = await unlockAudio();
@@ -291,7 +313,6 @@ async function playWithHighlight(text, responseEl) {
   const audioChunks = [];
 
   ttsSocket.onopen = () => {
-    console.log("✅ Connected to /tts");
     ttsSocket.send(text);
   };
 
@@ -303,53 +324,29 @@ async function playWithHighlight(text, responseEl) {
 
   ttsSocket.onclose = async () => {
     if (audioChunks.length === 0) {
-      console.warn("⚠️ No audio chunks received from server");
+      console.warn("No audio chunks received from server");
       return;
     }
 
     const combined = new Blob(audioChunks, { type: "audio/mpeg" });
     const url = URL.createObjectURL(combined);
 
-    // create audio element to decode sound
     const audio = document.createElement("audio");
     audio.src = url;
     audio.controls = false;
     audio.style.display = "none";
     document.body.appendChild(audio);
 
-    const spans = responseEl.querySelectorAll("span");
-    let index = 0;
-
-    audio.oncanplaythrough = async () => {
-      try {
-        await audio.play();
-        console.log("🔊 Playing audio");
-        const baseWordTime = (audio.duration * 1000) / Math.max(1, words.length);
-        const punctuationPause = (w) => (/[.,!?;:]$/.test(w) ? 1.4 : 1.0);
-
-        function highlightNext() {
-          spans.forEach((s) => s.classList.remove("highlight"));
-          if (index < spans.length) {
-            spans[index].classList.add("highlight");
-           if (wrapper) {
-  const scrollTarget = Math.max(0, wrapper.scrollHeight - wrapper.clientHeight * 0.5);
-  wrapper.scrollTo({ top: scrollTarget, behavior: "smooth" });
-}
-
-            const delay = baseWordTime * punctuationPause(words[index]);
-            index++;
-            setTimeout(highlightNext, delay);
-          }
-        }
-
-        setTimeout(highlightNext, 300);
-      } catch (err) {
-        console.error("Audio playback blocked:", err);
-        showEnableSoundButton();
-      }
-    };
+    try {
+      await audio.play();
+      console.log("🔊 Playing audio");
+    } catch (err) {
+      console.error("Audio playback blocked:", err);
+      showEnableSoundButton();
+    }
   };
 }
+
 
 // -----------------------------------------------------------
 // Feedback form
@@ -358,35 +355,49 @@ window.openFeedback = () => {
   window.open("https://docs.google.com/forms/d/e/1FAIpQLSfo6ehYOCkCCJflinhiKOGYoZ1SZNRiLVmCikFUe3ZOnjSewQ/viewform", "_blank");
 };
 
+function renderMessages() {
+  const container = document.getElementById("messages");
+  if (!container) return;
+
+  const history = loadContext();
+  container.innerHTML = "";
+
+  history.forEach((m) => {
+    const row = document.createElement("div");
+    row.className = "message-row " + (m.role === "user" ? "user" : "assistant");
+
+    const bubble = document.createElement("div");
+    bubble.className = "message-bubble " + (m.role === "user" ? "user" : "assistant");
+    bubble.textContent = m.content;
+
+    row.appendChild(bubble);
+    container.appendChild(row);
+  });
+
+  // scroll to bottom
+  container.scrollTop = container.scrollHeight;
+}
 
 // -----------------------------------------------------------
 // Ask Guru
 // -----------------------------------------------------------
 async function askGuru() {
   const userInputEl = document.getElementById("userInput");
-  const responseEl = document.getElementById("responseText");
-  const welcomeEl = document.getElementById("welcome-chat-text");
-  if (!userInputEl || !responseEl) return;
+  if (!userInputEl) return;
 
   const input = userInputEl.value.trim();
   if (!input) return;
 
-  // --- UI behavior (yours) ---
-  responseEl.textContent = "🧘‍♂️ Listening..";
-  responseEl.style.opacity = 1;
-  if (welcomeEl) welcomeEl.textContent = "";
-
-  // --- Load and update local context ---
-  const history = loadContext();              // read stored messages
+  // Load history and add user's message
+  const history = loadContext();
   history.push({ role: "user", content: input });
 
-  // 🧠 Keep only last 2 exchanges (4 total messages: 2 user + 2 assistant)
+  // keep only last 4 messages (2 exchanges)
   if (history.length > 4) history.splice(0, history.length - 4);
-
   saveContext(history);
+  renderMessages(); // show user message immediately
 
   try {
-    // --- Send message + context to backend ---
     const resp = await fetch("/ask-guru", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -397,23 +408,27 @@ async function askGuru() {
     const content = data?.choices?.[0]?.message?.content ?? null;
     if (!content) throw new Error("No response from the guru.");
 
-    // --- Store assistant’s reply back into context ---
     history.push({ role: "assistant", content });
     if (history.length > 4) history.splice(0, history.length - 4);
-    
     saveContext(history);
+    renderMessages();
 
-    // --- Play voice + highlight as before ---
-    await playWithHighlight(content, responseEl);
+    // optional: still play audio using TTS
+    await playWithHighlight(content);
   } catch (err) {
     console.error(err);
-    responseEl.textContent = `🌧 The guru is silent... ${err.message || err}`;
-    responseEl.style.opacity = 1;
+    history.push({
+      role: "assistant",
+      content: `The guru is silent right now.\n${err.message || err}`,
+    });
+    saveContext(history);
+    renderMessages();
   } finally {
     userInputEl.value = "";
-    autoResize(userInputEl);   // keep your resizing behavior
+    autoResize(userInputEl);
   }
 }
+
 
 
 // -----------------------------------------------------------
@@ -491,19 +506,31 @@ function toggleMic() {
 
 let isVoiceOn = false;
 
-  function toggleVoice() {
-    const icon = document.getElementById("voiceIcon");
+function toggleVoice() {
+  isVoiceOn = !isVoiceOn;
+  const offIcon = document.getElementById("voiceOffIcon");
+  const onIcon = document.getElementById("voiceOnIcon");
 
-    isVoiceOn = !isVoiceOn;
+  if (!offIcon || !onIcon) return;
 
-    if (isVoiceOn) {
-      icon.src = "voice-on.png";   // 🔊 voice ON icon
-      icon.alt = "Voice on";
-    } else {
-      icon.src = "voice-off.png";  // 🔇 voice OFF icon
-      icon.alt = "Voice off";
-    }
+  if (isVoiceOn) {
+    offIcon.classList.add("hidden");
+    onIcon.classList.remove("hidden");
+  } else {
+    onIcon.classList.add("hidden");
+    offIcon.classList.remove("hidden");
   }
+}
+
+function goBack() {
+  goToScreen(1); // or 2/3 depending on what you want
+}
+
+window.goToScreen = goToScreen;
+window.askGuru = askGuru;
+window.toggleVoice = toggleVoice;
+window.goBack = goBack;
+
 
 
 // ✅ Attach mic toggle to button
