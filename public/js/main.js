@@ -21,6 +21,23 @@ function saveContext(context) {
   localStorage.setItem(getLocalSessionKey(), JSON.stringify(context));
 }
 
+// -------- UI Chat History (for chat bubbles) --------
+const UI_HISTORY_KEY = "tvam_ui_history_" + sessionId;
+
+function loadUIHistory() {
+  try { return JSON.parse(localStorage.getItem(UI_HISTORY_KEY)) || []; }
+  catch { return []; }
+}
+
+function saveUIHistory(arr) {
+  localStorage.setItem(UI_HISTORY_KEY, JSON.stringify(arr));
+}
+
+// -------- GPT Context History (last 2 exchanges only) --------
+// We'll reuse loadContext/saveContext as GPT context helpers.
+// (They already use a session-specific key via getLocalSessionKey())
+
+
 
 // -----------------------------------------------------------
 // Persistent userId
@@ -164,18 +181,12 @@ function goToScreen(n) {
   }
 
   if (n === 4) {
-    renderMessages();
-  }
-}
-// -----------------------------------------------------------
-// Setup buttons and listeners
-// -----------------------------------------------------------
-document.addEventListener("DOMContentLoaded", () => {
+    // 🔄 Reset GPT + UI history for this session
+    saveContext([]);      // GPT context (for API)
+    saveUIHistory([]);    // UI chat (for bubbles)
 
-  // Seed welcome message as first guru message
-  let history = loadContext();
-  if (!history || history.length === 0) {
-    history = [
+    // 🌱 Seed welcome message in UI ONLY
+    saveUIHistory([
       {
         role: "assistant",
         content:
@@ -185,12 +196,16 @@ document.addEventListener("DOMContentLoaded", () => {
           "TVAM listens, not judges.\n" +
           "Begin whenever you’re ready."
       }
-    ];
-    saveContext(history);
-  }
+    ]);
 
-  // Initial render of chat when page loads
-  renderMessages();
+    renderMessages();
+  }
+}
+
+// -----------------------------------------------------------
+// Setup buttons and listeners
+// -----------------------------------------------------------
+document.addEventListener("DOMContentLoaded", () => {
 
   const beginBtn = document.querySelector(".begin-btn");
   if (beginBtn) {
@@ -359,7 +374,7 @@ function renderMessages() {
   const container = document.getElementById("messages");
   if (!container) return;
 
-  const history = loadContext();
+  const history = loadUIHistory();  // ⬅️ UI history only
   container.innerHTML = "";
 
   history.forEach((m) => {
@@ -378,6 +393,7 @@ function renderMessages() {
   container.scrollTop = container.scrollHeight;
 }
 
+
 // -----------------------------------------------------------
 // Ask Guru
 // -----------------------------------------------------------
@@ -388,46 +404,77 @@ async function askGuru() {
   const input = userInputEl.value.trim();
   if (!input) return;
 
-  // Load history and add user's message
-  const history = loadContext();
-  history.push({ role: "user", content: input });
+  // ---------- 1) UI HISTORY (full chat for bubbles) ----------
+  let uiHistory = loadUIHistory();
+  uiHistory.push({ role: "user", content: input });
 
-  // keep only last 4 messages (2 exchanges)
-  if (history.length > 4) history.splice(0, history.length - 4);
-  saveContext(history);
+  // Keep up to 50 messages in UI (you can change this to 30 if you prefer)
+  if (uiHistory.length > 50) {
+    uiHistory.splice(0, uiHistory.length - 50);
+  }
+
+  saveUIHistory(uiHistory);
   renderMessages(); // show user message immediately
+
+
+  // ---------- 2) GPT CONTEXT (last 2 exchanges = 4 msgs) ----------
+  let gptHistory = loadContext();
+  gptHistory.push({ role: "user", content: input });
+
+  // Trim to last 4 messages
+  if (gptHistory.length > 4) {
+    gptHistory = gptHistory.slice(-4);
+  }
+  saveContext(gptHistory);
+
 
   try {
     const resp = await fetch("/ask-guru", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: input, sessionId, history }),
+      body: JSON.stringify({
+        message: input,
+        sessionId,
+        history: gptHistory   // ⬅ only GPT context goes to API
+      }),
     });
 
     const data = await resp.json();
     const content = data?.choices?.[0]?.message?.content ?? null;
     if (!content) throw new Error("No response from the guru.");
 
-    history.push({ role: "assistant", content });
-    if (history.length > 4) history.splice(0, history.length - 4);
-    saveContext(history);
+    // ---------- Add assistant reply to UI ----------
+    uiHistory.push({ role: "assistant", content });
+    if (uiHistory.length > 50) {
+      uiHistory.splice(0, uiHistory.length - 50);
+    }
+    saveUIHistory(uiHistory);
     renderMessages();
+
+    // ---------- Add assistant reply to GPT context ----------
+    gptHistory.push({ role: "assistant", content });
+    if (gptHistory.length > 4) {
+      gptHistory = gptHistory.slice(-4);
+    }
+    saveContext(gptHistory);
 
     // optional: still play audio using TTS
     await playWithHighlight(content);
+
   } catch (err) {
     console.error(err);
-    history.push({
-      role: "assistant",
-      content: `The guru is silent right now.\n${err.message || err}`,
-    });
-    saveContext(history);
+
+    const fallback = `The guru is silent right now.\n${err.message || err}`;
+    uiHistory.push({ role: "assistant", content: fallback });
+    saveUIHistory(uiHistory);
     renderMessages();
+
   } finally {
     userInputEl.value = "";
     autoResize(userInputEl);
   }
 }
+
 
 
 
