@@ -166,7 +166,10 @@ function setPetalMode(mode) {
 // -----------------------------------------------------------
 // Navigation
 // -----------------------------------------------------------
+ let infoShown = false; // session-level flag
 function goToScreen(n) {
+ 
+
   document.querySelectorAll(".screen").forEach((s) => s.classList.remove("active"));
   const el = document.getElementById("screen" + n);
   if (el) el.classList.add("active");
@@ -181,6 +184,8 @@ function goToScreen(n) {
   }
 
   if (n === 4) {
+     document.getElementById("infoOverlay").classList.remove("hidden");
+      infoShown = true;
     // 🔄 Reset GPT + UI history for this session
     saveContext([]);      // GPT context (for API)
     saveUIHistory([]);    // UI chat (for bubbles)
@@ -404,6 +409,10 @@ async function askGuru() {
   const input = userInputEl.value.trim();
   if (!input) return;
 
+  // Clear input immediately
+  userInputEl.value = "";
+  autoResize(userInputEl);
+
   // ---------- 1) UI HISTORY (full chat for bubbles) ----------
   let uiHistory = loadUIHistory();
   uiHistory.push({ role: "user", content: input });
@@ -555,10 +564,9 @@ let isVoiceOn = false;
 
 function toggleVoice() {
   isVoiceOn = !isVoiceOn;
+
   const offIcon = document.getElementById("voiceOffIcon");
   const onIcon = document.getElementById("voiceOnIcon");
-
-  if (!offIcon || !onIcon) return;
 
   if (isVoiceOn) {
     offIcon.classList.add("hidden");
@@ -568,6 +576,7 @@ function toggleVoice() {
     offIcon.classList.remove("hidden");
   }
 }
+
 
 function goBack() {
   goToScreen(1); // or 2/3 depending on what you want
@@ -584,6 +593,23 @@ window.goBack = goBack;
 document.addEventListener("DOMContentLoaded", () => {
   const micBtn = document.getElementById("mic-btn");
   if (micBtn) micBtn.addEventListener("click", toggleMic);
+
+  const infoBtn = document.getElementById("infoBtn");
+const infoClose = document.getElementById("infoClose");
+const infoOverlay = document.getElementById("infoOverlay");
+
+if (infoBtn && infoOverlay) {
+  infoBtn.addEventListener("click", () => {
+    infoOverlay.classList.remove("hidden");
+  });
+}
+
+if (infoClose && infoOverlay) {
+  infoClose.addEventListener("click", () => {
+    infoOverlay.classList.add("hidden");
+  });
+}
+
 });
 
 

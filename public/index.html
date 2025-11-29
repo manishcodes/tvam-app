@@ -127,6 +127,40 @@
 
   <!-- SCREEN 4: Spiritual Guru Chat -->
   <div class="screen" id="screen4">
+<!-- INFO PANEL (hidden by default) -->
+<div id="infoOverlay" class="info-overlay hidden">
+  <div class="info-wrapper">
+<button id="infoClose" class="info-close">✕</button>
+  <div class="info-panel">
+    
+    <h3>Before You Start</h3>
+    <p>
+      This is a quiet place to talk about what you’re feeling.<br>
+      TVAM won’t give you solutions or tell you what to do.<br>
+      It will help you look at what’s happening inside, one small step at a time.
+      <br><br>
+      A tiny change is all we aim for — feeling a little clearer or a little lighter.
+      <br><br>
+      <strong>Here are a few things that help the chat work well:</strong><br>
+      • Talk about one feeling or one problem at a time.<br>
+      • Use short, simple messages.<br>
+      • When TVAM asks a question, take a small pause before answering.<br>
+      • If something doesn’t make sense, say “I don’t get it.”<br>
+      • Try not to ask for advice — we’re just looking together.<br>
+      • A “shift” is small: feeling calmer, clearer, or less tangled.<br>
+      • You can stop anytime by saying, “That’s enough.”<br><br>
+      When you’re ready, begin with:<br>
+      <em>“Right now, I feel…”</em>
+    </p>
+  </div>
+  </div>
+  
+</div>
+
+<!-- INFO BUTTON (top-right small icon) -->
+<button id="infoBtn" class="info-btn">
+  <img src="assets/info.png" alt="Info" />
+</button>
 
     <!-- Chat area -->
     <div class="chat-container">
@@ -147,10 +181,12 @@
     </div>
 
     <!-- Voice toggle -->
-    <button onclick="toggleVoice()" class="voice-mute" id="voiceBtn" title="Toggle voice">
-      <img src="assets/voice-off.png" id="voiceOffIcon" class="icon visible">
-      <img src="assets/voice-on.png" id="voiceOnIcon" class="icon hidden">
-    </button>
+  <button onclick="toggleVoice()" class="voice-mute" id="voiceBtn">
+    <img src="assets/voice-off.png" id="voiceOffIcon" class="icon">
+    <img src="assets/voice-on.png" id="voiceOnIcon" class="icon hidden">
+  </button>
+
+    
 
     <!-- Back button -->
     <button onclick="goBack()" class="go-back" id="goBackBtn" title="Go back">
