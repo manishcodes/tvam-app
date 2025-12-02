@@ -196,10 +196,10 @@ function goToScreen(n) {
         role: "assistant",
         content:
           "Welcome to TVAM.\n" +
-          "A space to slow down and see within.\n" +
-          "Share whatever feels present — there’s no right or wrong.\n" +
-          "TVAM listens, not judges.\n" +
-          "Begin whenever you’re ready."
+          "This is a calm place to slow down and look within.\n" +
+          "Share whatever feels true — there’s no right or wrong.\n" +
+          "TVAM listens and explores with you.\n" +
+          "Start whenever you’re ready."
       }
     ]);
 
