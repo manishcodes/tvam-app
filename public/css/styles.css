@@ -1244,3 +1244,98 @@ textarea {
     padding-bottom: 8rem;
   }
 }
+
+/* ---------- RESPONSIVE FIX FOR INFO PANEL (Screen 4) ---------- */
+
+/* Phones and small screens */
+@media (max-width: 600px) {
+
+  /* Make overlay push panel slightly lower */
+  #infoOverlay {
+    align-items: flex-start;
+    padding-top: 110px;  /* avoids logo + feedback + info button */
+  }
+
+  .info-wrapper {
+    width: 92%;
+    max-width: 340px; /* ↓ smaller panel */
+  }
+
+  .info-panel {
+    max-height: 65vh;      /* ↓ avoid footer overlap */
+    padding: 18px 20px;    /* ↓ tighter padding */
+    font-size: 14px;       /* ↓ smaller text */
+    line-height: 1.55;
+    border-radius: 18px;
+  }
+
+  .info-panel h3 {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+
+  .info-close {
+    top: 6px;
+    right: 25px;
+    width: 28px;
+    height: 28px;
+    font-size: 17px;
+  }
+
+  /* Move the info button so it doesn't overlap the panel */
+  .info-btn {
+    right: 50px;
+    top: 70px;
+  }
+}
+
+/* Very small phones (iPhone SE / Android mini) */
+@media (max-width: 400px) {
+
+  #infoOverlay {
+    padding-top: 120px;
+  }
+
+  .info-wrapper {
+    max-width: 310px;
+  }
+
+  .info-panel {
+    max-height: 60vh;   /* even shorter */
+    font-size: 13px;
+    padding: 15px 18px;
+  }
+
+  .info-close {
+    width: 26px;
+    height: 26px;
+    font-size: 16px;
+  }
+}
+
+/* ---------- FIX: Keep voice button in original position ---------- */
+
+.voice-mute {
+  top: 75px !important;
+  right: 20px !important;
+}
+
+/* ---------- FIX: Info button stays away from voice button ---------- */
+.info-btn {
+  top: 75px !important;
+  right: 75px !important; /* safe distance */
+}
+
+/* Mobile adjustments */
+@media (max-width: 600px) {
+  .info-btn {
+    top: 72px !important;
+    right: 65px !important;  /* ensure non-overlap on small screens */
+  }
+
+  .voice-mute {
+    top: 72px !important;
+    right: 16px !important;
+  }
+}
+
