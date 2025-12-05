@@ -364,22 +364,25 @@ textarea {
 
 /* ---------- SCREEN 1: Welcome Panel ---------- */
 .welcome-panel {
-  /* background: #fff; */
-  border-radius: 12px;
-  /* box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); */
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
-  justify-content: center;
-  padding: 3rem 2rem;
+
   width: 85%;
-  height: 80%;
   max-width: 900px;
   margin: auto;
+
+  padding: 3rem 2rem 6rem;  /* bottom padding so text never touches button */
+
   text-align: center;
   position: relative;
-  
+
+  /* ❗ Remove fixed height limitation */
+  min-height: 80%;
+  height: auto;
 }
+
 .welcome-logo-main 
 { 
   height: 40px; 
@@ -1215,4 +1218,29 @@ textarea {
   width: 90%;
   max-width: 600px;
   z-index: 999999;
+}
+
+/* ---------- MOBILE FIX FOR SCREEN 1 ---------- */
+@media (max-width: 600px) {
+  #screen1 .welcome-panel {
+    padding: 2rem 1rem 7rem;      /* more breathing space */
+    height: auto;                 /* allow natural expansion */
+    min-height: unset;            /* remove fixed constraint */
+  }
+
+  #screen1 .welcome-tagline {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  #screen1 .begin-btn {
+    bottom: 20px !important;      /* always visible */
+  }
+}
+
+/* Extra-small screens like older iPhones */
+@media (max-height: 700px) {
+  #screen1 .welcome-panel {
+    padding-bottom: 8rem;
+  }
 }
