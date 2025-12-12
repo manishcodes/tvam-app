@@ -852,7 +852,7 @@ textarea {
   border: none; /* remove any line or shadow */
   position: sticky;
   top: 0;
-  z-index: 100;
+  /* z-index: 100; */
 }
 
 /* Equal spacing for left, center, right */
@@ -1044,7 +1044,7 @@ textarea {
 .go-back {
   position: fixed;
   top: 75px;
-  left: 20px;
+  left: 2px;
 
   width: 37.5px;
   height: 37.5px;
@@ -1329,13 +1329,13 @@ textarea {
 /* Mobile adjustments */
 @media (max-width: 600px) {
   .info-btn {
-    top: 72px !important;
-    right: 65px !important;  /* ensure non-overlap on small screens */
+    top: 120px !important;
+    right: 2px !important;  /* ensure non-overlap on small screens */
   }
 
   .voice-mute {
     top: 72px !important;
-    right: 16px !important;
+    right: 2px !important;
   }
 }
 
