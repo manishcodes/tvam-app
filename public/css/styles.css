@@ -852,7 +852,12 @@ textarea {
   border: none; /* remove any line or shadow */
   position: sticky;
   top: 0;
-  /* z-index: 100; */
+  z-index: 13;
+  pointer-events: none;
+}
+
+.main-header *{
+  pointer-events: auto;
 }
 
 /* Equal spacing for left, center, right */
@@ -877,6 +882,11 @@ textarea {
 /* Align right feedback button */
 .header-right {
   justify-content: flex-end;
+  pointer-events: none;
+}
+
+.header-right * {
+  pointer-events: auto;
 }
 
 /* Logo styling */
